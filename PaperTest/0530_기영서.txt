@@ -1,0 +1,30 @@
+1.
+projectile move 방식 : collider 등을 이용하여 충돌 계산
+장점 : 물리계산을 유니티가 해주기 때문에 쉽다
+단점 : 부하가 심하고, 느리고, 프레임씹힘 현상이 일어난다
+raycast 방식 : 광선을 발사하여 충돌 체크
+장점 : 가볍다, 부하가 심하지않다, 프레임 씹힘 현상이 거의 없다
+단점 : 하나하나 코드로 써야해서 복잡해진다
+
+2. 
+
+if(isJumping&& this.agent.isOnOffMeshLink)
+{
+    StartCoroutine(this.JumpRoutine());
+}
+
+private void OnTriggerEnter(Collider other)
+{
+    if (other.gameObject.CompareTag("jump") && !isJumping)
+    {
+        this.animator.SetTrigger("isJump");
+        this.agent.speed = 0.1f;
+        this.isJumping = true;
+    }
+}
+IEnumerator JumpRoutine()
+{
+    yield return new WaitForSeconds(this.animator.GetCurrentAnimatorClipInfo(0).Length);
+    this.isJumping = false;
+    this.agent.speed = this.moveSpeed;
+}
