@@ -1,0 +1,34 @@
+1.
+class NameCard_2
+{
+    private int age;
+    private string name;
+
+    public int Age
+    {
+        get { return age; }
+        set { age = value; }
+    }
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+}
+
+2.
+var nameCard = new
+{
+    Name = "박상현",
+    Age = 17
+};
+
+Console.WriteLine("이름 : {0} , 나이 : {1}", nameCard.Name, nameCard.Age);
+
+var complex = new
+{
+    Real = 3,
+    Imaginary = -12
+};
+
+Console.WriteLine("Real : {0} , Imaginary : {1}" , complex.Real,complex.Imaginary);
