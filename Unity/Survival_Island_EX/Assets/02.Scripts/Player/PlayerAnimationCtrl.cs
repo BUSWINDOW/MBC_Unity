@@ -8,36 +8,30 @@ public class PlayerAnimationCtrl : MonoBehaviour
     Animation playerAnimation;
     private static string running = "running";
     private static string idle = "idle";
-    private static string fire = "Fire1";
+    private static string fire = "fire";
+    private static string reloading = "pump1";
     void Start()
     {
         this.playerAnimation = GetComponentInChildren<Animation>();
     }
 
-    void Update()
-    {
-        PlayerMove();
-        PlayerShoot();
 
+    public void PlayerShoot()
+    {
+        this.playerAnimation.Play(fire);
+    }
+    public void PlayerReloading()
+    {
+        this.playerAnimation.Play(reloading);
+    }
+    public void PlayerRunning()
+    {
+        this.playerAnimation.Blend(running, 4);
+    }
+    public void PlayerStop()
+    {
+        this.playerAnimation.Play(idle);
     }
 
-    private void PlayerShoot()
-    {
-        if (Input.GetButtonDown(fire))
-        {
-            this.playerAnimation.Play("fire");
-        }
-    }
-
-    private void PlayerMove()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            this.playerAnimation.Blend(running, 4);
-        }
-        else if(Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            this.playerAnimation.Play(idle);
-        }
-    }
+    
 }
