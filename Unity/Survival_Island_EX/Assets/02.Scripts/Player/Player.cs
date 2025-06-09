@@ -7,9 +7,11 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class Player : MonoBehaviour
 {
     private int bulletCnt;
+    public int m4BulletCnt;
     PlayerAnimationCtrl animationCtrl;
     PlayerSoundCtrl shootingSoundCtrl;
     PlayerShootEffectCtrl shootEffectCtrl;
+    WeaponChange weaponChange;
     private static string fire = "Fire1";
 
     [SerializeField]
@@ -17,12 +19,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform firePos;
 
-    bool isReloading;
-    bool isShooting;
-    bool isRunning;
+    public bool isReloading;
+    public bool isShooting;
+    public bool isRunning;
+    public bool isContinueShooting;
     void Start()
     {
         this.bulletCnt = 10;
+        this.m4BulletCnt = 30;
         this.isReloading = false;
         this.isShooting = false;
         this.isRunning = false;
@@ -30,6 +34,7 @@ public class Player : MonoBehaviour
         this.animationCtrl = GetComponent<PlayerAnimationCtrl>();
         this.shootingSoundCtrl = GetComponent<PlayerSoundCtrl>();
         this.shootEffectCtrl = GetComponent<PlayerShootEffectCtrl>();
+        this.weaponChange = GetComponent<WeaponChange>();
     }
 
     void Update()
@@ -40,7 +45,7 @@ public class Player : MonoBehaviour
     }
     private void PlayerShoot()
     {
-        if (Input.GetButtonDown(fire))
+        if (Input.GetButtonDown(fire)&&!this.weaponChange.isHaveM4a1)
         {
             if (!isReloading&&!isShooting&&!isRunning)
             {
@@ -55,7 +60,17 @@ public class Player : MonoBehaviour
                     Debug.Log($"남은 총알 : {this.bulletCnt}");
                 }
             }
-            
+        }
+        else if (Input.GetButtonDown(fire) && this.weaponChange.isHaveM4a1)
+        {
+            this.isContinueShooting = true;
+            StartCoroutine(this.ContinueShootingRoutine());
+        }
+        else if(Input.GetButtonUp(fire) && this.weaponChange.isHaveM4a1)
+        {
+            this.isContinueShooting = false;
+            this.isShooting = false ;
+            StopAllCoroutines();
         }
     }
     private void PlayerReloading()
@@ -107,5 +122,33 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         this.isShooting = false;
         this.animationCtrl.PlayerStop();
+    }
+    IEnumerator ContinueShootingRoutine()
+    {
+        while (isContinueShooting) 
+        {
+            while(m4BulletCnt > 0)
+            {
+                this.isShooting = true;
+                this.m4BulletCnt--;
+                this.animationCtrl.PlayerShoot();
+                this.shootingSoundCtrl.PlaySound(this.shootingSoundCtrl.shootSound);
+                this.shootEffectCtrl.PlayEffect();
+                var bullet = Instantiate(this.bulletPrefab, this.firePos.position, this.firePos.rotation);
+                yield return new WaitForSeconds(0.1f);
+                this.isShooting = false;
+                this.animationCtrl.PlayerStop();
+            }
+            this.isReloading = true;
+            this.animationCtrl.PlayerReloading();
+            this.shootingSoundCtrl.PlaySound(this.shootingSoundCtrl.reloadSound);
+            yield return new WaitForSeconds(1);
+            this.m4BulletCnt = 30;
+            this.isReloading = false;
+            Debug.Log("재장전 끝");
+            this.animationCtrl.PlayerStop();
+            yield return null;
+        }
+        
     }
 }

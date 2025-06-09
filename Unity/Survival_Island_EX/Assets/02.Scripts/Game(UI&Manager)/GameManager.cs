@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject skelPrefab;
+    public Transform spawnPos;
+    int spawnCnt;
     void Start()
     {
-        
+        this.spawnCnt = 0;
+        StartCoroutine(this.SpawnRoutine());
     }
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator SpawnRoutine()
     {
-        
+        while(this.spawnCnt < 5)
+        {
+            var skel = Instantiate(skelPrefab,this.spawnPos.position,Quaternion.identity);
+            this.spawnCnt++;
+            yield return new WaitForSeconds(3);
+        }
+        yield return null;
     }
 }
