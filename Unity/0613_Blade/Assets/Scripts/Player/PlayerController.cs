@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] CapsuleCollider col;
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip swordClip;
+    [SerializeField] AudioClip[] footStepClips;
 
 
     float lastSkillTime, lastDashTime, lastAttackTime;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
         this.col = GetComponent<CapsuleCollider>();
         this.source = GetComponent<AudioSource>();
         this.swordClip = Resources.Load<AudioClip>("Sounds/coconut_throw");
+        this.footStepClips = Resources.LoadAll<AudioClip>("Sounds/Steps");
     }
     float h = 0, v = 0;
     public void OnStickPos(Vector3 stickPos)
@@ -94,12 +96,18 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = speed;
                 if(MathF.Abs(h) > 0.001f && MathF.Abs(v) > 0.001f)
                 {
-                    
+
                     //Debug.Log($"{h} , {v}");
                     this.transform.rotation = Quaternion.LookRotation(new Vector3(h, 0, v));
                 }
             }
 
         }
+    }
+
+    public void FootstepSound()
+    {
+        source.clip = footStepClips[UnityEngine.Random.Range(0, this.footStepClips.Length)];
+        source.Play();
     }
 }

@@ -28,6 +28,7 @@ public class Touch_Pad : MonoBehaviour
         this.startPos = this.touchPad.position;
 
         this.dragRadius = 80f;
+        
     }
 
     public void ButtonDown() 
