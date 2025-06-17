@@ -1,0 +1,15 @@
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\bin\Debug\net8.0\0617_CSharp.exe
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\bin\Debug\net8.0\0617_CSharp.deps.json
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\bin\Debug\net8.0\0617_CSharp.runtimeconfig.json
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\bin\Debug\net8.0\0617_CSharp.dll
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\bin\Debug\net8.0\0617_CSharp.pdb
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.AssemblyInfoInputs.cache
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.AssemblyInfo.cs
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.csproj.CoreCompileInputs.cache
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.sourcelink.json
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.dll
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\refint\0617_CSharp.dll
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.pdb
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\0617_CSharp.genruntimeconfig.cache
+C:\Users\WD\Desktop\KYS\MBC_Unity\CSharp\0617_CSharp\obj\Debug\net8.0\ref\0617_CSharp.dll
