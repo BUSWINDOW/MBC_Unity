@@ -118,8 +118,12 @@ public class Player : MonoBehaviour
         this.animationCtrl.PlayerShoot();
         this.shootingSoundCtrl.PlaySound(this.shootingSoundCtrl.shootSound);
         this.shootEffectCtrl.PlayEffect();
-        var bullet = Instantiate(this.bulletPrefab, this.firePos.position, this.firePos.rotation);
-        yield return new WaitForSeconds(0.5f);
+        //var bullet = Instantiate(this.bulletPrefab, this.firePos.position, this.firePos.rotation);
+        var bullet = PoolingManager.instance.GetBullet();
+        bullet.transform.position = this.firePos.position;
+        bullet.transform.rotation = this.firePos.rotation;
+        bullet.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
         this.isShooting = false;
         this.animationCtrl.PlayerStop();
     }

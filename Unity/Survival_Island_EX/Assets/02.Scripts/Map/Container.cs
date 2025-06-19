@@ -19,8 +19,6 @@ public class Container : MonoBehaviour
             var hitEff = Instantiate(hitEffectPrefab.gameObject,collision.transform.position, Quaternion.identity);
             Destroy(hitEff,3f);
             this.source.PlayOneShot(this.hitSound);
-            Destroy(collision.gameObject.GetComponent<Rigidbody>());
-            Destroy(collision.gameObject.GetComponent<SphereCollider>());
         }
     }
 }

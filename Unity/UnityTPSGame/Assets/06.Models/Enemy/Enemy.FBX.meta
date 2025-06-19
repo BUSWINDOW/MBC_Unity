@@ -228,7 +228,7 @@ ModelImporter:
     legacyGenerateAnimations: 3
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
@@ -246,6 +246,9 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths:
     - pelvis/stomach/Ribs/chest/Rshoulder/Rarm/Rforearm/Rwrist/Rweaponholder
+    - mutant_meshLod2
+    - mutant_meshLod1
+    - mutant_mesh
     extraUserProperties: []
     clipAnimations: []
     isReadable: 1

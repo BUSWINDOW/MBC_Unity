@@ -14,9 +14,7 @@ public class TPSPlayerCtrl : MonoBehaviour
     public float runSpeed = 800;
     public float rotateSpeed = 400;
 
-    public GameObject bulletPrefab;
-    public GameObject[] bulletPool;
-    private int bulletCnt;
+
     
     
     void Start()
@@ -24,12 +22,7 @@ public class TPSPlayerCtrl : MonoBehaviour
         this.input = GetComponent<TPSPlayerInput>();
 
         this.rb = GetComponent<Rigidbody>();
-        this.bulletPool = new GameObject[150];
-        for (int i = 0; i < bulletPool.Length; i++)
-        {
-            this.bulletPool[i] = Instantiate(bulletPrefab);
-        }
-        this.bulletCnt = 0;
+
     }
 
     
