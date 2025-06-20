@@ -16,6 +16,9 @@ public class MoveAgent : MonoBehaviour
     private readonly float patrolSpeed = 1.5f;
     private readonly float traceSpeed = 4;
     private bool _patrolling;
+
+    private float damping = 1.0f; // 카메라를 부드럽게 돌게하는 옵션
+
     public bool Patrolling 
     {
         get 
@@ -27,6 +30,7 @@ public class MoveAgent : MonoBehaviour
             this._patrolling = value;
             if (this._patrolling)
             {
+                this.damping = 1; // 순찰할때 damping값 1
                 this.agent.speed = patrolSpeed;
             }
             
@@ -45,6 +49,7 @@ public class MoveAgent : MonoBehaviour
             this._traceTarget = value;
             this.agent.speed = traceSpeed;
             this.TraceTargetAct(this._traceTarget);
+            this.damping = 7;
         }
     }
     public float Speed { get { return  agent.speed/*agent.velocity.magnitude*/;} }
@@ -83,6 +88,8 @@ public class MoveAgent : MonoBehaviour
         this.agent.autoBraking = false;
         this.MoveWayPoint();
         agent.speed = this.patrolSpeed;
+        this._patrolling = true;
+        this.agent.updateRotation = false; // agent의 자체회전을 끔(부자연 스러워서)
     }
     void MoveWayPoint()
     {
@@ -101,6 +108,11 @@ public class MoveAgent : MonoBehaviour
     }
     void Update()
     {
+        if (!this.agent.isStopped) //agent가 움직이고 있을때
+        {
+            Quaternion rot = Quaternion.LookRotation(agent.desiredVelocity); // agentDesiredVelocity(agent가 가는 방향과 속도)
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rot, Time.deltaTime * damping);
+        }
         if (!_patrolling)
         {
             return;

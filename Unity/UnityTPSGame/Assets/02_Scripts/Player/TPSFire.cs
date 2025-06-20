@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,9 +21,10 @@ public class TPSFire : MonoBehaviour
     public int bulletClip; // 탄창
     public int maxBulletClip = 40; // 탄창 최대치
 
-    public float shotDelay = 0.3f; // 연사간 속도
+    public float shotDelay = 0.1f; // 연사간 속도
     private float prevTime;
 
+    bool isReload;
 
     public ParticleSystem cartiage;
     public ParticleSystem muzzleFlash;
@@ -31,7 +33,7 @@ public class TPSFire : MonoBehaviour
     void Start()
     {
         this.prevTime = Time.time;
-
+        this.isReload = false;
         /*this.bulletPool = new GameObject[this.maxBulletPool];
         for (int i = 0; i < bulletPool.Length; i++)
         {
@@ -46,7 +48,7 @@ public class TPSFire : MonoBehaviour
 
     void Update()
     {
-        if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun)
+        if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload)
         {
             this.prevTime = Time.time;
 
@@ -71,14 +73,39 @@ public class TPSFire : MonoBehaviour
                 //Debug.Log("풀 원점");
             }*/
 
-            var bullet = PoolingManager.Instance.GetBullet();
-            bullet.transform.position = this.firePos.position;
-            bullet.transform.rotation = this.firePos.rotation;
-            bullet.SetActive(true);
-            this.muzzleFlash.Play();
-            this.cartiage.Play();
+            Shot();
+            if(--this.bulletClip == 0)
+            {
+                this.Reload();
+            }
 
         }
 
+    }
+
+    private void Shot()
+    {
+        var bullet = PoolingManager.Instance.GetBullet();
+        bullet.transform.position = this.firePos.position;
+        bullet.transform.rotation = this.firePos.rotation;
+        bullet.SetActive(true);
+        this.muzzleFlash.Play();
+        this.cartiage.Play();
+    }
+    void Reload()
+    {
+        this.isReload=true;
+        this.input.Reload = true;
+        StartCoroutine(this.WaitSomeSec(() =>
+        {
+            this.bulletClip = this.maxBulletClip;
+            this.isReload = false;
+            this.input.Reload = false;
+        },1.5f));
+    }
+    IEnumerator WaitSomeSec(Action act, float sec)
+    {
+        yield return new WaitForSeconds(sec);
+        act();
     }
 }

@@ -64,7 +64,7 @@ public class BarrelCtrl : MonoBehaviour
             var _rb = col.GetComponent<Rigidbody>();
             _rb.mass = 1;
             _rb.AddExplosionForce(800f, transform.position, this.radius,500f);
-            col.GetComponent<BarrelCtrl>().Explosion();
+            //col.GetComponent<BarrelCtrl>().Explosion();
         }
     }
 }

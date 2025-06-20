@@ -25,13 +25,17 @@ public class TPSPlayerCtrl : MonoBehaviour
 
     }
 
-    
-    void Update()
+    private void Update()
+    {
+        this.transform.Rotate(Vector3.up * Time.fixedDeltaTime * rotateSpeed * this.input.MouseX);
+    }
+
+    void FixedUpdate()
     {
         Vector3 moveDir = (this.input.MoveX * this.transform.right + this.transform.forward* this.input.MoveZ).normalized;
         
         this.rb.velocity =  moveDir * (input.isRun?this.runSpeed:moveSpeed) * Time.fixedDeltaTime;
-        this.transform.Rotate(Vector3.up * Time.fixedDeltaTime * rotateSpeed * this.input.MouseX);
+        
 
         if (!this.input.isRun && this.input.Fire)
         {

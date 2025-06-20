@@ -16,7 +16,7 @@ public class TPSPlayerInput : MonoBehaviour
     public float MoveX { get; private set; }//감지된 회전의 입력값
     public float MouseX { get; private set; } //마우스 X축 회전값
     public bool Fire { get; private set; }
-    public bool Reload { get; private set; }
+    public bool Reload { get;  set; }
     
 
     void Start()
@@ -33,7 +33,7 @@ public class TPSPlayerInput : MonoBehaviour
         MoveZ = Input.GetAxis(moveYAxisName);
         MoveX = Input.GetAxis(moveXAxisName);
         Fire = Input.GetButton(fireButtonName);
-        Reload = Input.GetButtonDown(reloadButtonName);
+        //Reload = Input.GetButtonDown(reloadButtonName);
         this.MouseX = Input.GetAxis(rotateAxisName);
 
         if (Input.GetKey(KeyCode.LeftShift)&& this.MoveZ > 0.1f)

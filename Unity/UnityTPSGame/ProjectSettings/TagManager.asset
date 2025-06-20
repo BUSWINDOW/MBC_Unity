@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Fire
   - Bullet
+  - E_Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -21,7 +23,7 @@ TagManager:
   - Bullet
   - Effect
   - Object
-  - 
+  - E_Bullet
   - 
   - 
   - 

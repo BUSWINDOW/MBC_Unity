@@ -9,6 +9,7 @@ public class BulletCtrl : MonoBehaviour
     public Rigidbody rb;
     public float speed = 2000f;
     public SphereCollider col;
+    public int damage = 10;
 
     private void OnEnable()
     {

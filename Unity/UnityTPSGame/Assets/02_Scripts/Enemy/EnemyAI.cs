@@ -14,6 +14,7 @@ public class EnemyAI : MonoBehaviour
     private Transform playerTr;
     private MoveAgent moveAgent;
     private Animator animator;
+    private EnemyFire e_Fire;
     //공격 사정거리
     public float attackDist = 5.0f; //공격 범위 총알 발사 사정 거리
     public float traceDist = 10f; // 추적 시작 범위
@@ -22,11 +23,15 @@ public class EnemyAI : MonoBehaviour
     private WaitForSeconds ws;
     private readonly int hashMove = Animator.StringToHash("IsMove");
     private readonly int hashSpeed = Animator.StringToHash("Speed");
+    private readonly static int hashDie = Animator.StringToHash("Die");
+    private readonly static int hashDieIdx = Animator.StringToHash("DieIdx");
+
 
     void Awake()
     {
         this.animator = GetComponent<Animator>();
         this.playerTr = GameObject.FindWithTag("Player").transform;
+        this.e_Fire = GetComponent<EnemyFire>();
         this.ws = new WaitForSeconds(0.3f);
         this.moveAgent = GetComponent<MoveAgent>();
     }
@@ -39,6 +44,7 @@ public class EnemyAI : MonoBehaviour
     {
         while (!isDie)
         {
+            //Debug.Log(this.state);
             if(state == eState.Die) yield break;
 
             float dist = Vector3.Distance(this.transform.position, playerTr.position);
@@ -71,6 +77,8 @@ public class EnemyAI : MonoBehaviour
                         this.moveAgent.Patrolling = true;
                         this.animator.SetBool(hashMove, true);
                         this.animator.SetFloat(hashSpeed, this.moveAgent.Speed);
+                        this.e_Fire.isFire = false;
+
                         break;
                     }
                 case eState.Trace:
@@ -78,6 +86,8 @@ public class EnemyAI : MonoBehaviour
                         this.moveAgent.TraceTarget = this.playerTr.position;
                         this.animator.SetBool(hashMove, true);
                         this.animator.SetFloat(hashSpeed, this.moveAgent.Speed);
+                        this.e_Fire.isFire = false;
+
 
 
                         break;
@@ -86,10 +96,13 @@ public class EnemyAI : MonoBehaviour
                     {
                         this.moveAgent.Stop();
                         this.animator.SetBool(hashMove, false);
+                        this.e_Fire.isFire = true;
                         break;
                     }
                 case eState.Die:
                     {
+                        Die();
+
                         this.moveAgent.Stop();
                         break;
                     }
@@ -97,11 +110,17 @@ public class EnemyAI : MonoBehaviour
             }
         }
     }
-    private void OnDisable()
+
+    private void Die()
     {
-        
+        //Debug.Log("Die");
+        this.isDie = true;
+        this.e_Fire.isFire = false;
+        this.e_Fire.isReload = false;
+        this.moveAgent.agent.isStopped = true;
+        animator.SetInteger(hashDieIdx, Random.Range(0, 2));
+        animator.SetTrigger(hashDie);
+        this.GetComponent<CapsuleCollider>().enabled = false;
     }
-    void Update()
-    {
-    }
+
 }
