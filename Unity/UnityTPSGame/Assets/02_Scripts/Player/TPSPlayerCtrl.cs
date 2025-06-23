@@ -8,21 +8,37 @@ using UnityEngine.UI;
 public class TPSPlayerCtrl : MonoBehaviour
 {
     public TPSPlayerInput input;
+    private PlayerDamage damage;
     public Rigidbody rb;
+    private const string enemy = "Enemy";
+
+    public delegate void PlayerDieHandler();
+    public static event PlayerDieHandler onPlayerDie;
 
     public float moveSpeed = 300;
     public float runSpeed = 800;
     public float rotateSpeed = 400;
 
-
+    private int hp;
+    private int max_Hp = 100;
     
     
     void Start()
     {
         this.input = GetComponent<TPSPlayerInput>();
+        this.damage = GetComponent<PlayerDamage>();
+
+        this.damage.hitAction = () =>
+        {
+            this.hp -= 20;
+            if (this.hp <= 0)
+            {
+                PlayerDie();
+            }
+        };
 
         this.rb = GetComponent<Rigidbody>();
-
+        this.hp = this.max_Hp;
     }
 
     private void Update()
@@ -73,5 +89,18 @@ public class TPSPlayerCtrl : MonoBehaviour
 
 
 
+    }
+
+    void PlayerDie()
+    {
+        Debug.Log("Á×À½");
+        GameManager.Instance.isGameOver = true;
+        /*var enemys = GameObject.FindGameObjectsWithTag(enemy);
+        for (int i = 0; i < enemys.Length; i++)
+        {
+            enemys[i].SendMessage("PlayerDie", SendMessageOptions.DontRequireReceiver);
+        }*/
+
+        onPlayerDie();
     }
 }

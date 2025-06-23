@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     PlayerAnimationCtrl animationCtrl;
     PlayerSoundCtrl shootingSoundCtrl;
     PlayerShootEffectCtrl shootEffectCtrl;
+    PlayerDamage damage;
     WeaponChange weaponChange;
     private static string fire = "Fire1";
 
@@ -23,10 +25,17 @@ public class Player : MonoBehaviour
     public bool isShooting;
     public bool isRunning;
     public bool isContinueShooting;
+
+    public int hp;
+    public int max_Hp = 10;
+
+    public static Action dieAction;
+
     void Start()
     {
         this.bulletCnt = 10;
         this.m4BulletCnt = 30;
+        this.hp = this.max_Hp;
         this.isReloading = false;
         this.isShooting = false;
         this.isRunning = false;
@@ -35,6 +44,17 @@ public class Player : MonoBehaviour
         this.shootingSoundCtrl = GetComponent<PlayerSoundCtrl>();
         this.shootEffectCtrl = GetComponent<PlayerShootEffectCtrl>();
         this.weaponChange = GetComponent<WeaponChange>();
+        this.damage = GetComponent<PlayerDamage>();
+        this.damage.hitAction += () =>
+        {
+            this.hp -= 2;
+            if(this.hp <= 0)
+            {
+                GameManager.instance.isGameOver = true;
+                dieAction();
+                
+            }
+        };
     }
 
     void Update()
@@ -155,4 +175,5 @@ public class Player : MonoBehaviour
         }
         
     }
+    
 }

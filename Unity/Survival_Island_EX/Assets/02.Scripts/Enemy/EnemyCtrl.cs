@@ -28,13 +28,19 @@ public class EnemyCtrl : MonoBehaviour
     private readonly int hashAttack = Animator.StringToHash("IsAttack");
     private readonly int hashDie = Animator.StringToHash("isDie");
     private readonly int hashHit = Animator.StringToHash("isHit");
+    private readonly int hashPlayerDie = Animator.StringToHash("PlayerDie");
+    private readonly int hashReset = Animator.StringToHash("Reset");
     private bool isDie = false;
 
     public Action dieAction;
+
+    public Canvas hpUI;
+
     void Start()
     {
         this.agent = GetComponent<NavMeshAgent>();
         this.playerTr = GameObject.FindWithTag("Player").transform;
+        this.hpUI = GetComponentInChildren<Canvas>();
         this.animator = GetComponent<Animator>();
         this.E_Damage = GetComponent<EnemyDamage>();
         this.attackCol = GetComponentInChildren<BoxCollider>();
@@ -52,10 +58,7 @@ public class EnemyCtrl : MonoBehaviour
 
             if (this.hp <= 0)
             {
-                this.isDie = true;
-                this.GetComponent<CapsuleCollider>().enabled = false;
-                this.animator.SetTrigger(hashDie);
-                GetComponentInChildren<Canvas>().gameObject.SetActive(false);
+                Die();
                 //this.dieAction();
             }
             else
@@ -65,12 +68,50 @@ public class EnemyCtrl : MonoBehaviour
         };
 
         
+        Player.dieAction += () =>
+        {
+            this.animator.SetTrigger(hashPlayerDie);
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        };
         this.hp = this.maxHP;
+    }
+
+    private void Die()
+    {
+        this.isDie = true;
+        this.GetComponent<CapsuleCollider>().enabled = false;
+        this.animator.SetTrigger(hashDie);
+        this.hpUI.gameObject.SetActive(false);
+        StartCoroutine(this.DieRoutine());
+    }
+    IEnumerator DieRoutine()
+    {
+        yield return new WaitForSeconds(3);
+        this.gameObject.SetActive(false);
+        this.animator.SetTrigger(hashReset);
+        this.hpUI.gameObject.SetActive(true);
+        this.hp = 100;
+        this.hp_Bar.fillAmount = (float)hp / (float)maxHP;
+        this.hp_Text.text = $"HP : <color=#ff0000>{hp}</color>";
+        this.hp_Bar.color = new Color(1 - this.hp_Bar.fillAmount, this.hp_Bar.fillAmount, 0);
+        
+        this.isDie = false;
+        this.GetComponent<CapsuleCollider>().enabled = true;
+        
+    }
+    private void OnEnable()
+    {
+        BarrelCtrl.OnExplodAction += Die;
+    }
+    private void OnDisable()
+    {
+        BarrelCtrl.OnExplodAction -= Die;
     }
 
     void Update()
     {
-        if (isDie)
+        if (isDie||GameManager.instance.isGameOver)
         {
             return;
         }

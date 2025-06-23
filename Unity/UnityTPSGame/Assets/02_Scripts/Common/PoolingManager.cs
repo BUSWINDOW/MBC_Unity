@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
@@ -13,12 +14,18 @@ public class PoolingManager : MonoBehaviour
     [SerializeField] private List<GameObject> bulletPool = new List<GameObject>();
     [SerializeField] private List<GameObject> e_BulletPool = new List<GameObject>();
 
+    [Header("Enemy Pool")]
+    [SerializeField] private GameObject EnemyPrefab;
+    [SerializeField] private List<GameObject> EnemyPool;
+    [SerializeField] private List<Transform> SpawnList = new List<Transform>();
+    [SerializeField] private int maxEnemyPool = 5;
+
 
     int cnt = 0;
     int e_cnt = 0;
     GameObject bulletPoolObject;
     GameObject e_BulletPoolObject;
-
+    GameObject EnemyPoolObject;
 
     private void Awake()
     {
@@ -30,8 +37,52 @@ public class PoolingManager : MonoBehaviour
         }
         this.bulletPoolObject = new GameObject("Bullet Pool");
         this.e_BulletPoolObject = new GameObject("Enemy Bullet Pool");
+        this.EnemyPoolObject = new GameObject("Enemy Pool");
+
+        var spawnPos = GameObject.Find("SpawnPoints");
+        if(spawnPos != null)
+        {
+             spawnPos.GetComponentsInChildren<Transform>(this.SpawnList);
+        }
+        this.SpawnList.RemoveAt(0);
+
         CreateBulletPool(this.bulletPoolObject,this.bulletPool, this.bulletPrefab, ref this.cnt);
         CreateBulletPool(this.e_BulletPoolObject,this.e_BulletPool,this.e_BulletPrefab, ref this.e_cnt);
+        CreateEnemyPool();
+        StartCoroutine(this.CreateEnemyPooling());
+    }
+
+    IEnumerator CreateEnemyPooling()
+    {
+        while (!GameManager.Instance.isGameOver)
+        {
+            EnemySpawn();
+            yield return new WaitForSeconds(3f);
+        }
+    }
+
+    private void CreateEnemyPool()
+    {
+        for (int i = 0; i < this.maxEnemyPool; i++)
+        {
+            var enemy = Instantiate(this.EnemyPrefab, EnemyPoolObject.transform);
+            enemy.name = $"{i + 1}Έν";
+            enemy.SetActive(false);
+            this.EnemyPool.Add(enemy);
+        }
+    }
+    void EnemySpawn()
+    {
+        for (int i = 0; i < EnemyPool.Count; i++)
+        {
+            if (!EnemyPool[i].activeSelf)
+            {
+                EnemyPool[i].SetActive(true);
+                EnemyPool[i].transform.position = this.SpawnList[Random.Range(0, this.SpawnList.Count)].transform.position;
+                return;
+            }
+        }
+
     }
 
     private void CreateBulletPool(GameObject poolObject,List<GameObject> Pool, GameObject prefab, ref int cnt)
@@ -79,5 +130,8 @@ public class PoolingManager : MonoBehaviour
         CreateBullet(this.e_BulletPoolObject, this.e_BulletPool, this.e_BulletPrefab, ref e_cnt);
         return this.e_BulletPool[e_cnt - 1];
     }
+
+
+    
 
 }

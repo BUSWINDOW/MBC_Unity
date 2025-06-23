@@ -12,6 +12,15 @@ public class PoolingManager : MonoBehaviour
     private List<GameObject> bulletPool;
     private int cnt = 0;
 
+
+
+    //Àû
+    public GameObject skelPrefab;
+    public Transform spawnPos;
+    int MaxSpawnCnt = 5;
+    private GameObject EnemyPoolObject;
+    private List<GameObject> enemyPool;
+
     private void Awake()
     {
         instance = this;
@@ -24,6 +33,38 @@ public class PoolingManager : MonoBehaviour
         for(; cnt < 10;)
         {
             CreateBullet();
+        }
+
+        this.EnemyPoolObject = new GameObject("Enemy Pool");
+        this.enemyPool = new List<GameObject>();
+        for(int i = 0; i< this.MaxSpawnCnt; i++)
+        {
+            this.enemyPool.Add(Instantiate(skelPrefab, this.EnemyPoolObject.transform));
+            this.enemyPool[i].SetActive(false);
+        }
+        StartCoroutine(this.SpawnRoutine());
+    }
+
+
+    IEnumerator SpawnRoutine()
+    {
+        while (!GameManager.instance.isGameOver)
+        {
+            SpawnSkel();
+            yield return new WaitForSeconds(3);
+        }
+    }
+
+    private void SpawnSkel()
+    {
+        for(int i = 0;i< this.MaxSpawnCnt; i++)
+        {
+            if (!this.enemyPool[i].activeSelf)
+            {
+                this.enemyPool[i].transform.position = this.spawnPos.position;
+                this.enemyPool[i].SetActive(true);
+                return;
+            }
         }
     }
 

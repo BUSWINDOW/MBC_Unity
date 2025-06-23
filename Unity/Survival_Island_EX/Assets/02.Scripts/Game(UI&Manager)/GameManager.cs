@@ -4,22 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject skelPrefab;
-    public Transform spawnPos;
-    int spawnCnt;
-    void Start()
+    public static GameManager instance;
+
+    public bool isGameOver = false;
+    
+    void Awake()
     {
-        this.spawnCnt = 0;
-        StartCoroutine(this.SpawnRoutine());
+        instance = this;
+        
     }
-    IEnumerator SpawnRoutine()
-    {
-        while(this.spawnCnt < 5)
-        {
-            var skel = Instantiate(skelPrefab,this.spawnPos.position,Quaternion.identity);
-            this.spawnCnt++;
-            yield return new WaitForSeconds(3);
-        }
-        yield return null;
-    }
+    
 }

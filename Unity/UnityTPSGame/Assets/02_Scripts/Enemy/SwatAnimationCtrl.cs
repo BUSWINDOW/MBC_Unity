@@ -14,12 +14,23 @@ public class SwatAnimationCtrl : MonoBehaviour
     private readonly static int hashDieIdx = Animator.StringToHash("DieIdx");
     private readonly static int hashFire = Animator.StringToHash("Fire");
     private readonly static int hashReload = Animator.StringToHash("Reload");
+    private readonly static int hashWalkSpeed = Animator.StringToHash("WalkSpeed");
+    private readonly static int hashOffSet = Animator.StringToHash("OffSet");
+    private readonly static int hashPlayerDie = Animator.StringToHash("PlayerDie");
+
 
     // Start is called before the first frame update
     void Awake()
     {
         this.animator = GetComponent<Animator>();
     }
+
+    private void OnEnable()
+    {
+        animator.SetFloat(hashOffSet, Random.Range(0, 1.0f));
+        animator.SetFloat(hashWalkSpeed, Random.Range(1, 1.2f));
+    }
+
     public void SetPatroll(float speed)
     {
         this.animator.SetBool(hashMove, true);
@@ -44,5 +55,9 @@ public class SwatAnimationCtrl : MonoBehaviour
     public void SetReload()
     {
         this.animator.SetTrigger(hashReload);
+    }
+    public void SetGameOver()
+    {
+        this.animator.SetTrigger(hashPlayerDie);
     }
 }

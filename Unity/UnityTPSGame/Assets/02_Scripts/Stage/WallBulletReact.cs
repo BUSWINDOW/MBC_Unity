@@ -26,6 +26,7 @@ public class WallBulletReact : MonoBehaviour
 
             //var spark = Instantiate(this.sparkEffect, collision.transform.position,Quaternion.identity);
             this.source.PlayOneShot(this.hitClip);
+            Camera.main.GetComponent<Shake>();
             Destroy(spark, 5);
         }
     }

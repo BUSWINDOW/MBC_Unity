@@ -10,7 +10,6 @@ public class SwatAI : MonoBehaviour
 
     private Transform playerTr;
     private MoveAgent moveAgent;
-    private Animator animator;
     private SwatFire e_Fire;
 
     private SwatAnimationCtrl animCtrl;
@@ -26,7 +25,6 @@ public class SwatAI : MonoBehaviour
 
     void Awake()
     {
-        this.animator = GetComponent<Animator>();
         this.playerTr = GameObject.FindWithTag("Player").transform;
         this.e_Fire = GetComponent<SwatFire>();
         this.ws = new WaitForSeconds(0.3f);
@@ -37,6 +35,7 @@ public class SwatAI : MonoBehaviour
     {
         StartCoroutine(this.CheckState());
         StartCoroutine(CheckAction());
+
     }
     IEnumerator CheckState()
     {
@@ -97,7 +96,7 @@ public class SwatAI : MonoBehaviour
                     }
                 case eState.Die:
                     {
-                        Die();
+                        //Die();
 
                         this.moveAgent.Stop();
                         break;
@@ -107,7 +106,7 @@ public class SwatAI : MonoBehaviour
         }
     }
 
-    private void Die()
+    /*private void Die()
     {
         //Debug.Log("Die");
         this.isDie = true;
@@ -116,5 +115,5 @@ public class SwatAI : MonoBehaviour
         this.moveAgent.agent.isStopped = true;
         this.animCtrl.SetDie();
         this.GetComponent<CapsuleCollider>().enabled = false;
-    }
+    }*/
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class BarrelCtrl : MonoBehaviour
 
     private static readonly string bullet = "Bullet";
 
+    public static Action explodAction;
+
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
@@ -33,7 +36,7 @@ public class BarrelCtrl : MonoBehaviour
         this._renderer = GetComponent<MeshRenderer>();
         this.filter = GetComponent<MeshFilter>();
 
-        this._renderer.material.mainTexture = textures[Random.Range(0, textures.Length)]; 
+        this._renderer.material.mainTexture = textures[UnityEngine.Random.Range(0, textures.Length)]; 
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -56,7 +59,7 @@ public class BarrelCtrl : MonoBehaviour
         Destroy(exp, 1.4f);
         this.source.PlayOneShot(this.explosionClip);
 
-        filter.sharedMesh = bumpedMeshes[Random.Range(0, bumpedMeshes.Length)]; // 찌그러진 메쉬 적용하는 코드
+        filter.sharedMesh = bumpedMeshes[UnityEngine.Random.Range(0, bumpedMeshes.Length)]; // 찌그러진 메쉬 적용하는 코드
 
         Collider[] cols = Physics.OverlapSphere(this.transform.position, radius, 1<< 13);
         foreach (Collider col in cols)
@@ -65,6 +68,15 @@ public class BarrelCtrl : MonoBehaviour
             _rb.mass = 1;
             _rb.AddExplosionForce(800f, transform.position, this.radius,500f);
             //col.GetComponent<BarrelCtrl>().Explosion();
+            
         }
+        var cam = Camera.main.GetComponent<Shake>();
+        cam.shakeRotate = true;
+        //StartCoroutine(cam.ShakeCamera(1));
+        cam.ShakeTween(1);
+
+        explodAction();
+        
+
     }
 }
