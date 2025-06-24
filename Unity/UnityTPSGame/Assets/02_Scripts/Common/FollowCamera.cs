@@ -19,12 +19,23 @@ public class FollowCamera : MonoBehaviour
 
     void LateUpdate() //Update가 먼저 실행되고 그 이후에 실행 됨
     {
+        Debug.Log("Late");
         var CamPos = this.target.position - (Vector3.forward * distance) + (Vector3.up * height);
         this.transform.position = Vector3.Slerp(this.transform.position, CamPos, Time.deltaTime * moveDamping);
 
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, this.target.rotation, Time.deltaTime * rotateDamping);
         this.transform.LookAt(this.target.position + (Vector3.up * this.targetOffset));
+    }
+    private void FixedUpdate()
+    {
+        Debug.Log("Fixed");
+
+    }
+    private void Update()
+    {
+        Debug.Log("Normal");
+
     }
 
     private void OnDrawGizmos()

@@ -5120,7 +5120,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &2470178114674324469
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5141,9 +5141,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1.9653498
+  m_Height: 2.3360705
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9865009, z: 0}
+  m_Center: {x: 0, y: 1.1718614, z: 0}
 --- !u!82 &6900487594056758670
 AudioSource:
   m_ObjectHideFlags: 0

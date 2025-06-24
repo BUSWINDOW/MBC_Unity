@@ -20,9 +20,13 @@ public class TPSPlayerCtrl : MonoBehaviour
     public float rotateSpeed = 400;
 
     private int hp;
-    private int max_Hp = 100;
-    
-    
+    private int max_Hp = 100000;
+
+    [SerializeField] private Image hp_Bar;
+
+    private readonly Color initColor = new Color(0, 1, 0);
+
+
     void Start()
     {
         this.input = GetComponent<TPSPlayerInput>();
@@ -31,6 +35,8 @@ public class TPSPlayerCtrl : MonoBehaviour
         this.damage.hitAction = () =>
         {
             this.hp -= 20;
+            this.hp = Mathf.Clamp(this.hp, 0, this.max_Hp);
+            HP_Bar_Display();
             if (this.hp <= 0)
             {
                 PlayerDie();
@@ -39,6 +45,18 @@ public class TPSPlayerCtrl : MonoBehaviour
 
         this.rb = GetComponent<Rigidbody>();
         this.hp = this.max_Hp;
+        this.hp_Bar.color = initColor;
+    }
+
+    private void HP_Bar_Display()
+    {
+        this.hp_Bar.fillAmount = (float)hp / (float)max_Hp;
+        if (hp_Bar.fillAmount <= 0.3f)
+            hp_Bar.color = Color.red;
+        else if (hp_Bar.fillAmount <= 0.5f)
+        {
+            hp_Bar.color = Color.yellow;
+        }
     }
 
     private void Update()

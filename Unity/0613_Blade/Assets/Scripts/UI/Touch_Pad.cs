@@ -41,7 +41,7 @@ public class Touch_Pad : MonoBehaviour
     public void ButtonUp()
     {
         this.isPressed = false;
-        HandleInput(this.startPos);
+        HandleInput(this.startPos); //원래 위치로 되돌림
     }
 
     void FixedUpdate() //고정 프레임, 정확한 물리량에 따른 것을 구현 //2d movePosition을 이걸로 구현

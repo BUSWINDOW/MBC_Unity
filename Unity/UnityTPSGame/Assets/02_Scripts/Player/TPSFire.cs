@@ -2,6 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+[System.Serializable]
+public struct PlayerSfx
+{
+    public AudioClip[] fire;
+    public AudioClip[] reload;
+}
 
 public class TPSFire : MonoBehaviour
 {
@@ -15,11 +22,22 @@ public class TPSFire : MonoBehaviour
     private int bulletPoolCnt;
     public int maxBulletPool = 150;
 */
+
+    public enum eWeaponType
+    {
+        Rifle, Shotgun
+    }
+    public eWeaponType curWeaponType = eWeaponType.Rifle;
+    public PlayerSfx playerSfx;
+
     public Transform firePos;
+    
     public TPSPlayerInput input;
 
     public int bulletClip; // 탄창
     public int maxBulletClip = 40; // 탄창 최대치
+    [SerializeField] private Image bulletCntUIImage;
+    [SerializeField] private Text bulletCntUIText;
 
     public float shotDelay = 0.1f; // 연사간 속도
     private float prevTime;
@@ -28,6 +46,9 @@ public class TPSFire : MonoBehaviour
 
     public ParticleSystem cartiage;
     public ParticleSystem muzzleFlash;
+
+    private AudioSource source;
+    private Animator anim;
 
 
     void Start()
@@ -42,8 +63,17 @@ public class TPSFire : MonoBehaviour
         this.bulletPoolCnt = 0;*/
 
         this.input = GetComponent<TPSPlayerInput>();
+        this.source = GetComponent<AudioSource>();
+        this.anim = GetComponent<Animator>();
 
-        this.bulletClip = this.maxBulletClip;
+        BulletChange(this.maxBulletClip);
+    }
+
+    private void BulletChange(int cnt)
+    {
+        this.bulletClip = cnt;
+        this.bulletCntUIText.text = $"{cnt} / {this.maxBulletClip}";
+        this.bulletCntUIImage.fillAmount = (float)this.bulletClip / (float)this.maxBulletClip;
     }
 
     void Update()
@@ -74,7 +104,7 @@ public class TPSFire : MonoBehaviour
             }*/
 
             Shot();
-            if(--this.bulletClip == 0)
+            if(this.bulletClip == 0)
             {
                 this.Reload();
             }
@@ -86,9 +116,12 @@ public class TPSFire : MonoBehaviour
     private void Shot()
     {
         var bullet = PoolingManager.Instance.GetBullet();
+        this.BulletChange(--this.bulletClip);
         bullet.transform.position = this.firePos.position;
         bullet.transform.rotation = this.firePos.rotation;
         bullet.SetActive(true);
+        this.source.PlayOneShot(this.playerSfx.fire[(int)this.curWeaponType]);
+
         this.muzzleFlash.Play();
         this.cartiage.Play();
     }
@@ -96,12 +129,15 @@ public class TPSFire : MonoBehaviour
     {
         this.isReload=true;
         this.input.Reload = true;
+        this.source.PlayOneShot(this.playerSfx.reload[(int)this.curWeaponType]);
         StartCoroutine(this.WaitSomeSec(() =>
         {
-            this.bulletClip = this.maxBulletClip;
+            this.BulletChange(this.maxBulletClip);
             this.isReload = false;
             this.input.Reload = false;
-        },1.5f));
+            //Debug.Log(this.anim.GetCurrentAnimatorClipInfo(1).Length);
+            //Debug.Log(this.anim.GetCurrentAnimatorClipInfo(1));
+        }, 1.5f/*this.anim.GetCurrentAnimatorClipInfo(1).Length*/));
     }
     IEnumerator WaitSomeSec(Action act, float sec)
     {

@@ -26,7 +26,8 @@ public class BarrelCtrl : MonoBehaviour
 
     private static readonly string bullet = "Bullet";
 
-    public static Action explodAction;
+    //public static Action explodAction;
+    public static Action shakeAction;
 
     void Start()
     {
@@ -61,22 +62,22 @@ public class BarrelCtrl : MonoBehaviour
 
         filter.sharedMesh = bumpedMeshes[UnityEngine.Random.Range(0, bumpedMeshes.Length)]; // 찌그러진 메쉬 적용하는 코드
 
-        Collider[] cols = Physics.OverlapSphere(this.transform.position, radius, 1<< 13);
+        Collider[] cols = Physics.OverlapSphere(this.transform.position, radius, 1<< 13|1<<7);
         foreach (Collider col in cols)
         {
             var _rb = col.GetComponent<Rigidbody>();
             _rb.mass = 1;
             _rb.AddExplosionForce(800f, transform.position, this.radius,500f);
             //col.GetComponent<BarrelCtrl>().Explosion();
-            
+            col.gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
         }
-        var cam = Camera.main.GetComponent<Shake>();
-        cam.shakeRotate = true;
+        //var cam = Camera.main.GetComponent<Shake>();
+        //cam.shakeRotate = true;
         //StartCoroutine(cam.ShakeCamera(1));
-        cam.ShakeTween(1);
+        //cam.ShakeTween(1);
 
-        explodAction();
-        
+        //explodAction();
+        shakeAction();
 
     }
 }

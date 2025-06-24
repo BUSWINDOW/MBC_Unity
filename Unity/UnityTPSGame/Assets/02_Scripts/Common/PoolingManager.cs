@@ -20,6 +20,11 @@ public class PoolingManager : MonoBehaviour
     [SerializeField] private List<Transform> SpawnList = new List<Transform>();
     [SerializeField] private int maxEnemyPool = 5;
 
+    [Header("Enemy HP Bar Pool")]
+    [SerializeField] Canvas uiCanvas;
+    [SerializeField] private GameObject EnemyHPBarPrefab;
+    [SerializeField] private List<GameObject> EnemyHPBarPool = new List<GameObject>();
+
 
     int cnt = 0;
     int e_cnt = 0;
@@ -38,6 +43,7 @@ public class PoolingManager : MonoBehaviour
         this.bulletPoolObject = new GameObject("Bullet Pool");
         this.e_BulletPoolObject = new GameObject("Enemy Bullet Pool");
         this.EnemyPoolObject = new GameObject("Enemy Pool");
+        
 
         var spawnPos = GameObject.Find("SpawnPoints");
         if(spawnPos != null)
@@ -49,10 +55,14 @@ public class PoolingManager : MonoBehaviour
         CreateBulletPool(this.bulletPoolObject,this.bulletPool, this.bulletPrefab, ref this.cnt);
         CreateBulletPool(this.e_BulletPoolObject,this.e_BulletPool,this.e_BulletPrefab, ref this.e_cnt);
         CreateEnemyPool();
-        StartCoroutine(this.CreateEnemyPooling());
+
+        EnemyHPBarPrefab = Resources.Load<GameObject>("UI/Enemy_Hp_Bar");
+        this.CreateEnemyHpBarPooling();
+
+        StartCoroutine(this.EnemyRespawn());
     }
 
-    IEnumerator CreateEnemyPooling()
+    IEnumerator EnemyRespawn()
     {
         while (!GameManager.Instance.isGameOver)
         {
@@ -84,7 +94,27 @@ public class PoolingManager : MonoBehaviour
         }
 
     }
-
+    void CreateEnemyHpBarPooling()
+    {
+        for(int i =0; i < this.maxEnemyPool; i++)
+        {
+            var _hpBar = Instantiate(EnemyHPBarPrefab,this.uiCanvas.transform);
+            _hpBar.name = $"{i + 1} enemyHpBar";
+            _hpBar.SetActive(false);
+            this.EnemyHPBarPool.Add(_hpBar);
+        }
+    }
+    public GameObject GetHPBar()
+    {
+        foreach(var _hpBar in EnemyHPBarPool)
+        {
+            if (!_hpBar.activeSelf)
+            {
+                return _hpBar;
+            }
+        }
+        return null; //만약 부족하다면 여기서 새로 만들순 있겠다만, 굳이? 몬스터부터가 풀이 다 차있으면 안나오는데
+    }
     private void CreateBulletPool(GameObject poolObject,List<GameObject> Pool, GameObject prefab, ref int cnt)
     {
         

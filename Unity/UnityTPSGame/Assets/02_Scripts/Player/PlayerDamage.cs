@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerDamage : MonoBehaviour
 {
@@ -9,11 +11,15 @@ public class PlayerDamage : MonoBehaviour
     private readonly string e_Bullet = "E_Bullet";
 
     public Action hitAction;
+
+    [SerializeField] private Image bloodScreen;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         this.blood.Stop();
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -23,6 +29,13 @@ public class PlayerDamage : MonoBehaviour
             collision.gameObject.SetActive(false);
             this.blood.Play();
             this.hitAction();
+
+            this.bloodScreen.DOFade(1, 0.2f).OnComplete(() =>
+            {
+                this.bloodScreen.DOFade(0, 1);
+            });
+
+            
         }
     }
 
