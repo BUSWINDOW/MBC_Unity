@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 [System.Serializable]
 public struct PlayerSfx
 {
     public AudioClip[] fire;
     public AudioClip[] reload;
 }
+//Scriptable : 총을 바꿀때 바뀌는건 소리만 바뀌는게 아니라서, 그걸 다 바꾸려면 너무 긴 코드가 필요하다
+// 그때 필요한 내용.
 
 public class TPSFire : MonoBehaviour
 {
@@ -50,6 +53,8 @@ public class TPSFire : MonoBehaviour
     private AudioSource source;
     private Animator anim;
 
+    public Sprite[] weaponIcons;
+    public Image weaponImageUI;
 
     void Start()
     {
@@ -78,6 +83,8 @@ public class TPSFire : MonoBehaviour
 
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return; 
+        //버튼에 닿았다면 하위 코드 생략 , 이벤트 훅
         if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload)
         {
             this.prevTime = Time.time;
@@ -143,5 +150,11 @@ public class TPSFire : MonoBehaviour
     {
         yield return new WaitForSeconds(sec);
         act();
+    }
+
+    public void OnChangeWeapon()
+    {
+        this.curWeaponType = (eWeaponType)((int)++this.curWeaponType % 2);
+        weaponImageUI.sprite = this.weaponIcons[(int)this.curWeaponType];
     }
 }
