@@ -275,6 +275,7 @@ MonoBehaviour:
   rb: {fileID: 5945047126158365755}
   speed: 200
   col: {fileID: 3840076249871000818}
+  damage: 0
 --- !u!1001 &5220417110509242532
 PrefabInstance:
   m_ObjectHideFlags: 0

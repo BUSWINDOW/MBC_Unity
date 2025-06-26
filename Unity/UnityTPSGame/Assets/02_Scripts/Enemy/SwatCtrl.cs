@@ -118,6 +118,7 @@ public class SwatCtrl : MonoBehaviour
         //hpBar.gameObject.SetActive(false);
 
         StartCoroutine(this.DieRoutine());
+        GameManager.Instance.IncKillCnt();
     }
 
     public void PlayerDie()

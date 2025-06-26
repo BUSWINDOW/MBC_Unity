@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
@@ -27,15 +28,28 @@ public class Player : MonoBehaviour
     public bool isContinueShooting;
 
     public int hp;
-    public int max_Hp = 10;
+    public int maxhp;
+    public int speed;
+    public int granade;
+    public int B_damage;
+
+    //public GameData data;
 
     public static Action dieAction;
+
 
     void Start()
     {
         this.bulletCnt = 10;
         this.m4BulletCnt = 30;
-        this.hp = this.max_Hp;
+
+        //데이터 로드 부분
+        DataManager.instance.Load();
+        DataManager.instance.ItemApplyAction += this.DataApply;
+        DataApply();
+
+        this.hp = this.maxhp;
+
         this.isReloading = false;
         this.isShooting = false;
         this.isRunning = false;
@@ -48,13 +62,22 @@ public class Player : MonoBehaviour
         this.damage.hitAction += () =>
         {
             this.hp -= 2;
-            if(this.hp <= 0)
+            if (this.hp <= 0)
             {
                 GameManager.instance.isGameOver = true;
                 dieAction();
-                
+
             }
         };
+
+    }
+
+    private void DataApply()
+    {
+        this.maxhp = DataManager.instance.gameData.hp;
+        this.speed = DataManager.instance.gameData.speed;
+        this.granade = DataManager.instance.gameData.granade;
+        this.B_damage = DataManager.instance.gameData.damage;
     }
 
     void Update()
@@ -175,5 +198,4 @@ public class Player : MonoBehaviour
         }
         
     }
-    
 }

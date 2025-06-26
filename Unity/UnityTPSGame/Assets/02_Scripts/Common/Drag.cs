@@ -42,6 +42,9 @@ public class Drag : MonoBehaviour,IDragHandler , IBeginDragHandler, IEndDragHand
         if(this.transform.parent == this.inventoryTr)
         {
             this.transform.SetParent(this.itemListTr.transform);
+            //아이템을 빼는 경우에 만약 그 아이템이 이미 있었다면 걔를 list에서 제거함
+            //만약 없었더라도(안 넣었던걸 애초부터 이상한곳에 끌어서 여기로 온 경우) 에러가 나진 않음
+            GameManager.Instance.RemoveItem(this.GetComponent<ItemInfo>().itemData);
         }
     }
 }

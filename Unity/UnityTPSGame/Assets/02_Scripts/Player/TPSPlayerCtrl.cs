@@ -44,7 +44,9 @@ public class TPSPlayerCtrl : MonoBehaviour
         };
 
         this.rb = GetComponent<Rigidbody>();
+        this.max_Hp = (int)GameManager.Instance.gameData.hp;
         this.hp = this.max_Hp;
+        this.moveSpeed = GameManager.Instance.gameData.speed;
         this.hp_Bar.color = initColor;
     }
 
@@ -58,6 +60,18 @@ public class TPSPlayerCtrl : MonoBehaviour
             hp_Bar.color = Color.yellow;
         }
     }
+
+    private void OnEnable()
+    {
+        GameManager.ItemChangeAction += this.UpdateSetUp;
+    }
+    void UpdateSetUp()
+    {
+        this.moveSpeed = GameManager.Instance.gameData.speed;
+        this.max_Hp = (int)GameManager.Instance.gameData.hp;
+        //this.hp = (int)GameManager.Instance.gameData.hp - this.hp;
+    }
+
 
     private void Update()
     {

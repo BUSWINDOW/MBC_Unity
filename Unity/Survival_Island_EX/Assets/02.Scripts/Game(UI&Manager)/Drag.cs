@@ -35,6 +35,7 @@ public class Drag : MonoBehaviour,IDragHandler,IBeginDragHandler,IEndDragHandler
         if (this.transform.parent == this.inventory.transform)
         {
             this.transform.SetParent(this.itemSlot.transform);
+            DataManager.instance.RemoveItem(this.GetComponent<ItemInfo>().data);
         }
     }
 

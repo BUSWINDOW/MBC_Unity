@@ -9,18 +9,29 @@ public class BulletCtrl : MonoBehaviour
     public Rigidbody rb;
     public float speed = 2000f;
     public SphereCollider col;
-    public int damage = 10;
+    public int damage;
+    private void Start()
+    {
+        GameManager.ItemChangeAction += this.UpdateSetUp;
+    }
 
     private void OnEnable()
     {
         this.rb = GetComponent<Rigidbody>();
         this.col = GetComponent<SphereCollider>();
+        this.damage = (int)GameManager.Instance.gameData.damage;
+
         
+
         this.rb.AddForce(this.transform.forward * this.speed, ForceMode.Impulse);
         StartCoroutine(this.WaitSomeSecond(() => 
         {
             this.gameObject.SetActive(false);
         } , 5));
+    }
+    void UpdateSetUp()
+    {
+        this.damage = (int)GameManager.Instance.gameData.damage;
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -30,6 +41,9 @@ public class BulletCtrl : MonoBehaviour
     {
         this.GetComponent<TrailRenderer>().Clear();
         this.rb.Sleep();
+
+        //GameManager.ItemChangeAction -= this.UpdateSetUp;
+
         /*this.rb.velocity = Vector3.zero;
         this.rb.angularVelocity = Vector3.zero;*/
     }

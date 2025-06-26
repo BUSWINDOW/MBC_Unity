@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 7459462137073485495}
   - component: {fileID: 7836594572119244343}
   - component: {fileID: 3687110916983996778}
+  - component: {fileID: 6779930206835620917}
+  - component: {fileID: 4904593562904629013}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -164,3 +166,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae15dba00dd5b5a45aac74e265d7579c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory: {fileID: 0}
+  itemSlot: {fileID: 0}
+--- !u!225 &6779930206835620917
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4410584519540440930}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4904593562904629013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4410584519540440930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04429b261f47cab4a830d63f4ef8ef24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    hp: 0
+    speed: 0
+    granade: 0
+    damage: 0
