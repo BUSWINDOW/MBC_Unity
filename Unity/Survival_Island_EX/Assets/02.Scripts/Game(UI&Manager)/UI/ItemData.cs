@@ -14,7 +14,7 @@ public class ItemData
 {
     public enum eItemIdx
     {
-        Hp,Speed,Granade,Shock
+        None,Hp,Speed,Granade,Shock
     }
     
     public eItemIdx Idx;

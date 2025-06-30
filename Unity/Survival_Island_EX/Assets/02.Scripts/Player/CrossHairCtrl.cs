@@ -22,7 +22,6 @@ public class CrossHairCtrl : MonoBehaviour
             this.aimImage.color = Color.red;
             if (!this.isGaze)
             {
-                Debug.Log("Start");
                 StartCoroutine(this.GazeRoutine());
             }
             this.isGaze = true;

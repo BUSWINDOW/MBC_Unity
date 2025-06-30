@@ -35,7 +35,8 @@ public class Drag : MonoBehaviour,IDragHandler,IBeginDragHandler,IEndDragHandler
         if (this.transform.parent == this.inventory.transform)
         {
             this.transform.SetParent(this.itemSlot.transform);
-            DataManager.instance.RemoveItem(this.GetComponent<ItemInfo>().data);
+            //DataManager가 인벤토리를 관리하는게 아닌 플레이어쪽으로 관리되도록
+            //DataManager.instance.RemoveItem(this.GetComponent<ItemInfo>().data);
         }
     }
 

@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using System.Collections.Generic;
+using UnityEditor.Search;
 
 [System.Serializable]
 public class GameData
@@ -21,5 +22,7 @@ public class GameData
     
     public int damage = 1;
 
-    public List<ItemData> items = new List<ItemData>();
+    public ItemData[] items = new ItemData[4];
+    
+    
 }

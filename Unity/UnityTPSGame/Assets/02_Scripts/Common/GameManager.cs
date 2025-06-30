@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DataInfo;
-using Unity.Android.Types;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     public Text killCntTxtUi;
 
     public DataManager dataManager;
-    public GameData gameData;
+    //public GameData gameData;
+    public GameDataObject gameData;
 
     //인벤토리의 아이템이 변경되었을때 실행시킬 액션
     public static Action ItemChangeAction;
@@ -45,17 +46,28 @@ public class GameManager : MonoBehaviour
     void LoadGameData()
     {
         //KillCnt = PlayerPrefs.GetInt("KillCnt", 0);//PlayerPrefs : 플레이어 Preferences
-        gameData = this.dataManager.Load();
+        
+        
+        //gameData = this.dataManager.Load();
 
         if(gameData.equipItem.Count > 0)
         {
             this.InventorySetUp();
         }
         this.killCntTxtUi.text = $"Kill : <color=#ff0000>{this.gameData.killCnt.ToString("000")}</color>";
+
+        //.asset 파일에 데이터 저장
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(gameData);
+#endif
     }
     private void SaveGameData()
     {
-        this.dataManager.Save(this.gameData);
+        //this.dataManager.Save(this.gameData);
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(gameData);
+#endif
+
     }
     void InventorySetUp()
     {
@@ -123,6 +135,11 @@ public class GameManager : MonoBehaviour
                 }
         }
         ItemChangeAction();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(gameData);
+#endif
+
     }
     public void RemoveItem(Item item) // 인벤토리에 아이템 제거 시 게임 데이터 업데이트
     {
@@ -169,6 +186,11 @@ public class GameManager : MonoBehaviour
         }
 
         ItemChangeAction();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(gameData);
+#endif
+
     }
 
     private bool isPaused;

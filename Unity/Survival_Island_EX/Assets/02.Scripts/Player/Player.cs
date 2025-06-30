@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using static UnityEditor.Progress;
 
 
 public class Player : MonoBehaviour
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     PlayerDamage damage;
     WeaponChange weaponChange;
     private static string fire = "Fire1";
+    private static string skelTag = "Skel";
 
     [SerializeField]
     private GameObject bulletPrefab;
@@ -32,24 +34,64 @@ public class Player : MonoBehaviour
     public int speed;
     public int granade;
     public int B_damage;
+    //public ItemData[] equips = new ItemData[4];
+    public Drop[] slots;
 
-    //public GameData data;
+    //public GameData gameData;
+    public GameDataSO gameData;
+
+    public ItemInfo[] items;
 
     public static Action dieAction;
-
 
     void Start()
     {
         this.bulletCnt = 10;
         this.m4BulletCnt = 30;
 
-        //데이터 로드 부분
-        DataManager.instance.Load();
-        DataManager.instance.ItemApplyAction += this.DataApply;
-        DataApply();
+
+
+
+        this.InitStats();
+
+
+
+        for(int i = 0; i < slots.Length; i++)
+        {
+            slots[i].itemEquipAction += (idx) =>
+            {
+                this.gameData.items[idx] = slots[idx].item;
+                this.StatUpdate(this.slots[idx].item ,(CharValue, ItemValue) =>
+                {
+                    return CharValue + ItemValue;
+                });
+                UnityEditor.EditorUtility.SetDirty(this.gameData);
+            };
+            slots[i].itemRemoveAction += (idx) =>
+            {
+                this.StatUpdate(this.slots[idx].item, (CharValue, ItemValue) =>
+                {
+                    return CharValue - ItemValue;
+                });
+                this.gameData.items[idx] = null;
+                UnityEditor.EditorUtility.SetDirty(this.gameData);
+            };
+            if (gameData.items[i].Idx != ItemData.eItemIdx.None)
+            {
+                Debug.Log(this.gameData.items[i].Idx);
+                this.slots[i].item = this.gameData.items[i];
+            }
+        }
 
         this.hp = this.maxhp;
 
+
+        
+        InitSetting();
+    }
+
+    private void InitSetting()
+    {
         this.isReloading = false;
         this.isShooting = false;
         this.isRunning = false;
@@ -69,22 +111,96 @@ public class Player : MonoBehaviour
 
             }
         };
-
     }
 
-    private void DataApply()
+
+    private void StatUpdate(ItemData item, Func<int,int,int> op) // 아이템이 갱신됐을때 스탯 적용용 함수
     {
-        this.maxhp = DataManager.instance.gameData.hp;
-        this.speed = DataManager.instance.gameData.speed;
-        this.granade = DataManager.instance.gameData.granade;
-        this.B_damage = DataManager.instance.gameData.damage;
+        switch (item.Idx)
+        {
+            case ItemData.eItemIdx.None:
+                break;
+            case ItemData.eItemIdx.Hp:
+                this.maxhp =op(this.maxhp, item.Value);
+                break;
+            case ItemData.eItemIdx.Speed:
+                this.speed =op(this.speed, item.Value);
+                break;
+            case ItemData.eItemIdx.Shock:
+                this.B_damage = op(this.B_damage, item.Value);
+                break;
+            case ItemData.eItemIdx.Granade:
+                this.granade = op(this.granade, item.Value);
+                break;
+        }
+
     }
+
+    private void InitStats()
+    {
+        this.maxhp = gameData.hp;
+        this.speed = gameData.speed;
+        this.B_damage = gameData.damage;
+        this.granade = gameData.granade;
+        for (int i = 0; i < gameData.items.Length; i++) 
+        {
+            if (gameData.items[i].Idx != ItemData.eItemIdx.None)
+                this.items[(int)gameData.items[i].Idx - 1].transform.SetParent(this.slots[i].transform);
+            switch (gameData.items[i].Idx)
+            {
+                case ItemData.eItemIdx.None:
+                    break;
+                case ItemData.eItemIdx.Hp:
+                    this.maxhp += gameData.items[i].Value;
+                    
+                    break;
+                case ItemData.eItemIdx.Speed:
+                    this.speed += gameData.items[i].Value;
+                    break;
+                case ItemData.eItemIdx.Granade:
+                    this.granade += gameData.items[i].Value;
+                    break;
+                case ItemData.eItemIdx.Shock:
+                    this.B_damage += gameData.items[i].Value;
+                    break;
+            }
+        }
+    }
+
+
+
+
 
     void Update()
     {
         PlayerShoot();
         PlayerReloading();
         PlayerMove();
+
+        //rayCast로 오토 슈팅
+        RaycastHit hit;
+        if(Physics.Raycast(this.firePos.position, this.firePos.forward, out hit, 20f, 1<<6 | 1<< 7))
+        {
+            if (hit.collider.CompareTag(skelTag))
+            {
+                if (!isReloading && !isShooting && !isRunning)
+                {
+                    if (this.bulletCnt == 0) //장전 부분
+                    {
+                        Debug.Log("재장전 시작");
+                        StartCoroutine(this.ReloadingRoutine());
+                    }
+                    else //사격 부분
+                    {
+                        StartCoroutine(this.ShootingRoutine());
+                        Debug.Log($"남은 총알 : {this.bulletCnt}");
+                    }
+                }
+            }
+        }
+
+        
+
     }
     private void PlayerShoot()
     {
@@ -166,7 +282,7 @@ public class Player : MonoBehaviour
         bullet.transform.position = this.firePos.position;
         bullet.transform.rotation = this.firePos.rotation;
         bullet.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.4f);
         this.isShooting = false;
         this.animationCtrl.PlayerStop();
     }

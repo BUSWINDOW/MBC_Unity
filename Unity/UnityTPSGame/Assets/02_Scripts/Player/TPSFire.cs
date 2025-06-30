@@ -56,6 +56,21 @@ public class TPSFire : MonoBehaviour
     public Sprite[] weaponIcons;
     public Image weaponImageUI;
 
+    public PlayerRifleData RifleGunData;
+    public PlayerRifleData ShotGunData;
+
+    private PlayerRifleData currentGun;
+
+    private int enemyLayer;
+    private int obstacleLayer;
+
+    private int layerMask;
+
+    private readonly static string enemyTag = "Enemy";
+
+    private bool isFire = false;
+    private float prevFire;
+    public float autiFireRate = 0.15f;
     void Start()
     {
         this.prevTime = Time.time;
@@ -72,6 +87,13 @@ public class TPSFire : MonoBehaviour
         this.anim = GetComponent<Animator>();
 
         BulletChange(this.maxBulletClip);
+        this.currentGun = this.RifleGunData;
+
+        this.enemyLayer = LayerMask.NameToLayer("Enemy");
+        obstacleLayer = LayerMask.NameToLayer("Object");
+
+        this.layerMask = 1 << this.enemyLayer | 1 << this.obstacleLayer;//비트 연산
+
     }
 
     private void BulletChange(int cnt)
@@ -83,8 +105,28 @@ public class TPSFire : MonoBehaviour
 
     void Update()
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return; 
+        Debug.DrawRay(firePos.position, firePos.forward * 20f, Color.white); // 레이 나가는거 체크
+
+
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         //버튼에 닿았다면 하위 코드 생략 , 이벤트 훅
+
+        RaycastHit hit;
+        if (Physics.Raycast(this.firePos.position, firePos.forward, out hit, 20f, this.layerMask))
+        {
+            isFire = (hit.collider.CompareTag(enemyTag));
+        }
+        else
+            isFire = false;
+
+        if (!isReload && isFire)
+        {
+            if (Time.time > this.prevFire)
+                this.Shot();
+            this.prevFire = Time.time + this.autiFireRate;
+        }
+
+
         if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload)
         {
             this.prevTime = Time.time;
@@ -111,7 +153,7 @@ public class TPSFire : MonoBehaviour
             }*/
 
             Shot();
-            if(this.bulletClip == 0)
+            if (this.bulletClip == 0)
             {
                 this.Reload();
             }
@@ -127,7 +169,7 @@ public class TPSFire : MonoBehaviour
         bullet.transform.position = this.firePos.position;
         bullet.transform.rotation = this.firePos.rotation;
         bullet.SetActive(true);
-        this.source.PlayOneShot(this.playerSfx.fire[(int)this.curWeaponType]);
+        this.source.PlayOneShot(this.currentGun.shotClip);
 
         this.muzzleFlash.Play();
         this.cartiage.Play();
@@ -136,7 +178,7 @@ public class TPSFire : MonoBehaviour
     {
         this.isReload=true;
         this.input.Reload = true;
-        this.source.PlayOneShot(this.playerSfx.reload[(int)this.curWeaponType]);
+        this.source.PlayOneShot(this.currentGun.reloadClip);
         StartCoroutine(this.WaitSomeSec(() =>
         {
             this.BulletChange(this.maxBulletClip);
@@ -156,5 +198,6 @@ public class TPSFire : MonoBehaviour
     {
         this.curWeaponType = (eWeaponType)((int)++this.curWeaponType % 2);
         weaponImageUI.sprite = this.weaponIcons[(int)this.curWeaponType];
+        this.currentGun = this.currentGun == this.RifleGunData ? this.ShotGunData : this.RifleGunData;
     }
 }
