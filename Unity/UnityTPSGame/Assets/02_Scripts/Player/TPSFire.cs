@@ -111,7 +111,7 @@ public class TPSFire : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         //버튼에 닿았다면 하위 코드 생략 , 이벤트 훅
 
-        RaycastHit hit;
+        /*RaycastHit hit;
         if (Physics.Raycast(this.firePos.position, firePos.forward, out hit, 20f, this.layerMask))
         {
             isFire = (hit.collider.CompareTag(enemyTag));
@@ -125,7 +125,7 @@ public class TPSFire : MonoBehaviour
                 this.Shot();
             this.prevFire = Time.time + this.autiFireRate;
         }
-
+*/
 
         if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload)
         {

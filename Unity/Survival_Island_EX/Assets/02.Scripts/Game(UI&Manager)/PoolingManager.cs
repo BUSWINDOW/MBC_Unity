@@ -27,15 +27,14 @@ public class PoolingManager : MonoBehaviour
     }
     void Start()
     {
-        
-        this.bulletPoolObject = new GameObject("bulletPool");
+        this.bulletPoolObject = Instantiate(new GameObject("bulletPool"), this.transform);
         this.bulletPool = new List<GameObject>();
         for(; cnt < 10;)
         {
             CreateBullet();
         }
 
-        this.EnemyPoolObject = new GameObject("Enemy Pool");
+        this.EnemyPoolObject = Instantiate(new GameObject("Enemy Pool"), this.transform);
         this.enemyPool = new List<GameObject>();
         for(int i = 0; i< this.MaxSpawnCnt; i++)
         {

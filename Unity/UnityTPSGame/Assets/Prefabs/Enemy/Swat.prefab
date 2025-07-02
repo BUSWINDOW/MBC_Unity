@@ -4948,6 +4948,7 @@ GameObject:
   - component: {fileID: 2470178114674324469}
   - component: {fileID: 6900487594056758670}
   - component: {fileID: 1209860144468591699}
+  - component: {fileID: 4583763811228189236}
   m_Layer: 7
   m_Name: Swat
   m_TagString: Enemy
@@ -5061,6 +5062,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5711b5a159b9dd49a63e47fccb0dced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hpBarImage: {fileID: 0}
+  hpBarDimImage: {fileID: 0}
+  hpBar: {fileID: 0}
+  hpBarOffset: {x: 0, y: 2.2, z: 0}
 --- !u!114 &8155193210386582764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5253,6 +5258,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+--- !u!114 &4583763811228189236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009709185964633018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff3c5a0c2410e644b706154e215340a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRange: 15
+  viewAngle: 120
 --- !u!1 &4980845540037336420
 GameObject:
   m_ObjectHideFlags: 0
@@ -5383,6 +5402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 705a115972a0f0844b78c539b246685e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   _radius: 0.05
   _color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &7986097999794867136

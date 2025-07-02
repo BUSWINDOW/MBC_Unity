@@ -11,6 +11,7 @@ public class SwatAI : MonoBehaviour
     private Transform playerTr;
     private MoveAgent moveAgent;
     private SwatFire e_Fire;
+    private SwatFov fov;
 
     private SwatAnimationCtrl animCtrl;
 
@@ -27,6 +28,7 @@ public class SwatAI : MonoBehaviour
     {
         this.playerTr = GameObject.FindWithTag("Player").transform;
         this.e_Fire = GetComponent<SwatFire>();
+        this.fov = GetComponent<SwatFov>();
         this.ws = new WaitForSeconds(0.3f);
         this.moveAgent = GetComponent<MoveAgent>();
         this.animCtrl = GetComponent<SwatAnimationCtrl>();
@@ -39,6 +41,9 @@ public class SwatAI : MonoBehaviour
     }
     IEnumerator CheckState()
     {
+
+        yield return new WaitForSeconds(1); // 1초 대기
+                                            // 오브젝트 풀에 생성 시, 다른 스크립트에서 초기화를 위해 대기
         while (!isDie)
         {
             //Debug.Log(this.state);
@@ -47,9 +52,12 @@ public class SwatAI : MonoBehaviour
             float dist = Vector3.Distance(this.transform.position, playerTr.position);
             if (dist <= attackDist)
             {
-                this.state = eState.Attack;
+                if (fov.isViewPlayer())
+                    this.state = eState.Attack; // 사이에 장애물 없으면 공격
+                else
+                    this.state = eState.Trace; // 아니면 마저 추적
             }
-            else if (dist <= traceDist)
+            else if (this.fov.isTracePlayer())
             {
                 this.state = eState.Trace;
             }

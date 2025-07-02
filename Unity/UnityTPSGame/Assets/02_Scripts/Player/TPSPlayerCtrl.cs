@@ -80,10 +80,23 @@ public class TPSPlayerCtrl : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 moveDir = (this.input.MoveX * this.transform.right + this.transform.forward* this.input.MoveZ).normalized;
-        
-        this.rb.velocity =  moveDir * (input.isRun?this.runSpeed:moveSpeed) * Time.fixedDeltaTime;
-        
+        Vector3 moveDir = (this.input.MoveX * this.transform.right + this.transform.forward * this.input.MoveZ).normalized;
+
+
+
+        // 최종 속도 계산
+        this.rb.velocity = moveDir * (input.isRun ? this.runSpeed : moveSpeed) * Time.fixedDeltaTime;
+
+
+        /*Vector3 moveDir = (this.input.MoveX * this.transform.right + this.transform.forward * this.input.MoveZ).normalized;
+
+        // 이동 속도 계산
+        float speed = (input.isRun ? this.runSpeed : moveSpeed);
+
+        // 힘을 가해 이동 (ForceMode.Acceleration은 질량 무시하고 지속적인 힘 적용)
+        this.rb.AddForce(moveDir * speed, ForceMode.Acceleration);*/
+
+
 
         if (!this.input.isRun && this.input.Fire)
         {

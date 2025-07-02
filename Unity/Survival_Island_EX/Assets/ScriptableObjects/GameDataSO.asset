@@ -17,11 +17,11 @@ MonoBehaviour:
   granade: 1
   damage: 1
   items:
+  - Idx: 2
+    Value: 10
   - Idx: 0
     Value: 0
-  - Idx: 0
-    Value: 0
-  - Idx: 0
-    Value: 0
+  - Idx: 3
+    Value: 10
   - Idx: 0
     Value: 0
