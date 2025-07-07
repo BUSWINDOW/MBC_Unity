@@ -11,6 +11,9 @@ public class WomanMovement : MonoBehaviour
     [Header("플레이어 스탯")]
     public float moveSpeed = 5f; // 이동 속도
     public float rotSpeed = 180f; // 회전 속도
+
+    private readonly string moveParam = "Move"; // 애니메이션 파라미터 이름
+
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
@@ -25,6 +28,7 @@ public class WomanMovement : MonoBehaviour
     void Move()
     {
         Vector3 moveDistance = this.input.Move * transform.forward * this.moveSpeed * Time.fixedDeltaTime;
+        this.anim.SetFloat(this.moveParam, this.input.Move);
         this.rb.MovePosition(this.rb.position + moveDistance);
     }
     void Rotate()
