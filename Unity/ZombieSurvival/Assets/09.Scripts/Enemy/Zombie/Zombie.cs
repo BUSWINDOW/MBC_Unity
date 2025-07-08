@@ -8,7 +8,7 @@ public class Zombie :LivingEntity
     private NavMeshAgent agent; // 네비게이션 에이전트
     private AudioSource source;
     private Animator animator;
-    private MeshRenderer meshRenderer; // 메쉬 랜더러
+    private SkinnedMeshRenderer meshRenderer; // 메쉬 랜더러
 
     //오디오소스, 네브메쉬, 콜라이더, 오디오클립, blood Effect, 랜더러
 
@@ -41,7 +41,7 @@ public class Zombie :LivingEntity
         this.source = GetComponent<AudioSource>();
         this.agent = GetComponent<NavMeshAgent>();
         this.animator = GetComponent<Animator>();
-        this.meshRenderer = GetComponent<MeshRenderer>();
+        this.meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
     }
 
@@ -51,9 +51,17 @@ public class Zombie :LivingEntity
         this.hp = this.maxHp;
         this.damage = data.damage; // 좀비의 공격력 설정
         this.agent.speed = data.moveSpeed; // 네비게이션 에이전트의 이동 속도 설정
+        this.agent.enabled = true; // 네비게이션 에이전트 활성화
+        Collider[] cols = GetComponents<Collider>(); // 콜라이더 가져오기
+        foreach (Collider col in cols)
+        {
+            col.enabled = true; // 콜라이더 비활성화
+        }
+        this.isDead = false; // 좀비가 살아있음
+        //StartCoroutine(this.UpdatePath());
         this.meshRenderer.material.color = data.skinColor; // 좀비의 색상 설정
     }
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(this.UpdatePath()); // 경로 업데이트 코루틴 시작
     }
@@ -101,17 +109,18 @@ public class Zombie :LivingEntity
     }
     public override void Die()
     {
-        base.Die();
+        //StopAllCoroutines(); // 모든 코루틴 정지
         //자신의 모든 콜라이더 비활성화
         Collider[] cols = GetComponents<Collider>(); // 콜라이더 가져오기
         foreach (Collider col in cols)
         {
             col.enabled = false; // 콜라이더 비활성화
         }
-        this.agent.isStopped = true; // 네비게이션 에이전트 정지
+        //this.agent.isStopped = true; // 네비게이션 에이전트 정지
         this.agent.enabled = false; // 네비게이션 에이전트 비활성화
         this.source.PlayOneShot(this.deathClip); // 죽음 소리 재생
         this.animator.SetTrigger(hashDie); // 죽음 애니메이션 트리거
+        base.Die();
     }
     public void OnTriggerStay(Collider other)
     {

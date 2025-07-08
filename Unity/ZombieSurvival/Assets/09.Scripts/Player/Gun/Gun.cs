@@ -26,7 +26,7 @@ public class Gun : MonoBehaviour
 
     private float fireDistance = 100f; // 총알이 날아가는 최대 거리(사정거리)
 
-    public int ammo { get; private set; } // 현재 보유중인 총알 수
+    public int ammo { get; set; } // 현재 보유중인 총알 수
     public int magAmmo { get; private set; } // 현재 탄창 내 총알 수
 
     public float lastShotTime = 0f; // 마지막 사격 시간
@@ -72,11 +72,15 @@ public class Gun : MonoBehaviour
 
     private void Shot()
     {
-        this.magAmmo--; // 탄창 내 총알 수 감소
+        
         if (this.magAmmo <= 0)
         {
             this.Reload(); // 탄창 내 총알이 0이 되면 장전 시작
             return;
+        }
+        else
+        {
+            this.magAmmo--; // 탄창 내 총알 수 감소
         }
         RaycastHit hit;
         Vector3 hitPos = Vector3.zero; // 총알이 맞은 위치 초기화

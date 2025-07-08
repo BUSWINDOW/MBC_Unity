@@ -31,7 +31,7 @@ public class LivingEntity : MonoBehaviour,IDamageable
     public virtual void Die()
     {
         this.isDead = true; // 죽음 상태로 변경
-        //this.DieAction();
+        this.DieAction();
 
         this.gameObject.SetActive(false); // 오브젝트 비활성화
     }

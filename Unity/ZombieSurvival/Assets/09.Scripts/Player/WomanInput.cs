@@ -31,7 +31,7 @@ public class WomanInput : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Instance != null && GameManager.Instance.isGameOver)
+        if(GameManager.Instance != null && GameManager.Instance.IsGameOver)
         {
             this.Move = 0;
             this.Rotate = 0;

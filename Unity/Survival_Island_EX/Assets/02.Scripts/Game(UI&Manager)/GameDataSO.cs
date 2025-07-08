@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using System.Collections.Generic;
-using UnityEditor.Search;
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName ="GameDataSO",menuName ="Create GameData" ,order = 1)]

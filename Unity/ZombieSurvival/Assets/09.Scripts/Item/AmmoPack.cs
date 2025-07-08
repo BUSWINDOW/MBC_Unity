@@ -8,7 +8,12 @@ public class AmmoPack : MonoBehaviour , IItem
     // Implement the Use method from IItem interface
     public void Use(GameObject target)
     {
-        //탄약 추가
-        Debug.Log("Ammo Pack used on " + target.name);
+        var shooter = target.GetComponent<WomanShooter>();
+        if (shooter != null && shooter.gun != null)
+        {
+            shooter.gun.ammo += ammo; // 총기의 탄약을 증가시킴
+        }
+        Destroy(gameObject); // 아이템 사용 후 제거
+
     }
 }

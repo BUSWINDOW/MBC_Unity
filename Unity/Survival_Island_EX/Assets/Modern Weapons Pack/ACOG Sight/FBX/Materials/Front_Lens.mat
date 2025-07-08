@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Front_Lens
-  m_Shader: {fileID: 32, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,11 +24,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 03ec29e27af10e44b9843d93c0158136, type: 3}
+        m_Texture: {fileID: 8400000, guid: d40f8bdac15b3af47b673235b2d985eb, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Cutoff: 0.5
     - _Shininess: 0.07245041
     m_Colors:
     - _Color: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}

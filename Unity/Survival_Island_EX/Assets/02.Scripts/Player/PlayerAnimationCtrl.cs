@@ -10,6 +10,7 @@ public class PlayerAnimationCtrl : MonoBehaviour
     private static string idle = "idle";
     private static string fire = "fire";
     private static string reloading = "pump1";
+    private static string zoom = "zoom";
     void Start()
     {
         this.playerAnimation = GetComponentInChildren<Animation>();
@@ -32,6 +33,9 @@ public class PlayerAnimationCtrl : MonoBehaviour
     {
         this.playerAnimation.Play(idle);
     }
-
+    public void PlayerZoom()
+    {
+        this.playerAnimation.Play(zoom);
+    }
     
 }

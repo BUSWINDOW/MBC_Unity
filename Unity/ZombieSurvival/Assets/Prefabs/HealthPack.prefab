@@ -94,6 +94,8 @@ GameObject:
   - component: {fileID: 4607950341564650}
   - component: {fileID: 135478876175241966}
   - component: {fileID: 108751749025666960}
+  - component: {fileID: 521708929973974540}
+  - component: {fileID: 2260373063502393330}
   m_Layer: 0
   m_Name: HealthPack
   m_TagString: Untagged
@@ -200,3 +202,28 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &521708929973974540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838412652947266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 696147c6d80e80541bc084dffa73eedb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 50
+--- !u!114 &2260373063502393330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838412652947266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d83a5f11c7ea3dd4ebc6e9cd0760808a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

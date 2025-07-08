@@ -1685,10 +1685,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
-  m_Height: 2.3
+  m_Radius: 0.5635741
+  m_Height: 2.6127875
   m_Direction: 1
-  m_Center: {x: 0, y: 1.25, z: 0}
+  m_Center: {x: 0, y: 1.0936064, z: 0}
 --- !u!54 &4091423812443389323
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1731,6 +1731,7 @@ MonoBehaviour:
   hp: 0
   chaseDist: 20
   attackDist: 3
+  hpUI: {fileID: 0}
 --- !u!114 &8349207438315918200
 MonoBehaviour:
   m_ObjectHideFlags: 0

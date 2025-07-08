@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
-using static UnityEditor.Progress;
 
 
 public class Player : MonoBehaviour
@@ -51,8 +50,9 @@ public class Player : MonoBehaviour
 
 
 
-
+#if UNITY_EDITOR
         this.InitStats();
+#endif
 
 
 
@@ -65,7 +65,9 @@ public class Player : MonoBehaviour
                 {
                     return CharValue + ItemValue;
                 });
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this.gameData);
+#endif
             };
             slots[i].itemRemoveAction += (idx) =>
             {
@@ -74,7 +76,9 @@ public class Player : MonoBehaviour
                     return CharValue - ItemValue;
                 });
                 this.gameData.items[idx] = null;
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this.gameData);
+#endif
             };
             if (gameData.items[i].Idx != ItemData.eItemIdx.None)
             {
@@ -199,7 +203,16 @@ public class Player : MonoBehaviour
             }
         }
 
-        
+        //øÏ≈¨∏Ø¿∏∑Œ ¡‹¿Œ ¡‹ æ∆øÙ
+        if (Input.GetMouseButtonDown(1))
+        {
+            this.animationCtrl.PlayerZoom();
+        }
+
+        else if (Input.GetMouseButtonUp(1))
+        {
+            this.animationCtrl.PlayerStop();
+        }
 
     }
     private void PlayerShoot()
