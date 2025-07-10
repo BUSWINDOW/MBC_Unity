@@ -1649,6 +1649,8 @@ MonoBehaviour:
   uiCanvas: {fileID: 794700745}
   EnemyHPBarPrefab: {fileID: 0}
   EnemyHPBarPool: []
+  effect: {fileID: 100006, guid: ccbcfc705a39717429590a9f247ec30a, type: 3}
+  effectPool: []
 --- !u!4 &586496976
 Transform:
   m_ObjectHideFlags: 0

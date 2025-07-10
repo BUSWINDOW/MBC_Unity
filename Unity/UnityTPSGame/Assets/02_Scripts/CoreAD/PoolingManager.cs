@@ -32,6 +32,12 @@ public class PoolingManager : MonoBehaviour
     GameObject e_BulletPoolObject;
     GameObject EnemyPoolObject;
 
+
+    //이펙트 풀링 만들면서 구조 점검
+    public GameObject effect;
+    public List<GameObject> effectPool = new List<GameObject>();
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -60,6 +66,41 @@ public class PoolingManager : MonoBehaviour
         this.CreateEnemyHpBarPooling();
 
         StartCoroutine(this.EnemyRespawn());
+
+        //풀링 생성
+        CreatePool0710(this.effect);
+    }
+
+    private void CreatePool0710(GameObject prefab)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            CreateObj(prefab, this.effectPool);
+        }
+    }
+
+    private void CreateObj(GameObject prefab, List<GameObject> pool)
+    {
+        var a = Instantiate(prefab);
+        a.SetActive(false);
+        pool.Add(a); // 어디 아래에 넣을거라면 매개변수로 그 transform도 받으면 됨
+    }
+    public GameObject GetObj0710()
+
+    {
+        for (int i = 0; i < this.effectPool.Count; i++)
+        {
+            if (!this.effectPool[i].activeSelf)
+            {
+                this.effectPool[i].SetActive(true);
+                return this.effectPool[i];
+            }
+        }
+        //모두 활성화 되어있다면 새로 생성
+        CreateObj(this.effect, this.effectPool);
+        return this.effectPool[this.effectPool.Count - 1]; //마지막에 생성된 오브젝트를 반환
+        //어디에 자식 오브젝트로 넣었다가 쓸때 빼고 그럴거면 setParent(null)등을 저 풀에 들어가는 게임 오브젝트의 코드에서 사용
+        
     }
 
     IEnumerator EnemyRespawn()

@@ -1,7 +1,9 @@
 {
     "name": "StageAD",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:50d265a9117c95d47b25a96b2c3cef15"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
