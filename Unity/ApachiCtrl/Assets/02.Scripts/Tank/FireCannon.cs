@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class FireCannon : MonoBehaviour
+public class FireCannon : MonoBehaviourPun
 {
     public Transform firePos;
     private TankInput input;
@@ -16,6 +17,9 @@ public class FireCannon : MonoBehaviour
     public AudioClip expClip;
 
     public float maxDistance = 100f; //레이저 최대 거리
+
+    private readonly string tankTag = "Player"; //탱크 태그
+    private readonly string apacheTag = "Apache"; //아파치 태그
 
     Ray ray;
     int TerrainLayer;
@@ -37,9 +41,15 @@ public class FireCannon : MonoBehaviour
     {
         if (this.input.isFire)
         {
-            Fire();
+            if (photonView.IsMine) // 로컬이라면
+            {
+                Fire(); //그냥 내 Fire호출
+                photonView.RPC("Fire", RpcTarget.Others);
+            }
+
         }
     }
+    [PunRPC]
     void Fire()
     {
         this.source.PlayOneShot(this.fireClip);
@@ -47,17 +57,21 @@ public class FireCannon : MonoBehaviour
         RaycastHit hit;
 
         this.ray = new Ray(this.firePos.position, this.firePos.forward);
-        if(Physics.Raycast(ray,out hit, this.maxDistance, 1<< this.TerrainLayer))
+        if(Physics.Raycast(ray,out hit, this.maxDistance, 1<< this.TerrainLayer|1<<7))
         {
             isHit = true;
-
+            if (hit.collider.CompareTag(tankTag))
+            {
+                string tag = hit.collider.tag;
+                hit.collider.gameObject.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
+            }
         }
         else
         {
             isHit = false;
-            
         }
         this.ShowEffect(hit);
+        
     }
     void ShowEffect(RaycastHit hit)
     {
@@ -84,4 +98,5 @@ public class FireCannon : MonoBehaviour
             this.source.PlayOneShot(this.expClip);
         }
     }
+
 }
