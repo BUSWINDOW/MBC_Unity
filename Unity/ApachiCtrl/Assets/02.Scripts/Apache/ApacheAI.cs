@@ -61,7 +61,8 @@ public class ApacheAI : MonoBehaviourPun
     }
     void Update()
     {
-        CheckP();
+        if (PhotonNetwork.IsMasterClient)
+            CheckP();
     }
 
     void WayPatrol()
