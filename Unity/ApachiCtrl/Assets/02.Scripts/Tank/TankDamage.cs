@@ -36,7 +36,7 @@ public class TankDamage : MonoBehaviourPun
     [PunRPC]
     void OnDamageRPC(string tag) 
     {
-        if (this.curHp > 0 && tag == this.tankTag) 
+        if (this.curHp > 0 && (tag == this.tankTag||tag == this.apacheTag)) 
         {
             //데미지 전달
             HpBarInit(tag); // 체력바 UI 업데이트
@@ -51,17 +51,34 @@ public class TankDamage : MonoBehaviourPun
     IEnumerator Explosion()
     {
         var eff = Instantiate(this.expEffect, this.transform.position, Quaternion.identity);
-        Destroy(eff,2f); // 폭발 이펙트 제거
+        Destroy(eff, 2f); // 폭발 이펙트 제거
         this.GetComponent<BoxCollider>().enabled = false; // 탱크의 충돌체를 비활성화
         this.GetComponent<Rigidbody>().isKinematic = true; // 탱크의 물리 엔진을 비활성화
         SetTankVisible(false); // 탱크 메쉬를 비활성화
+
+        this.gameObject.tag = "Untagged"; // 탱크의 태그를 언태그로 변경
+        ScriptsCtrl(false);
         yield return ws; // 잠시 대기
         SetTankVisible(true); // 탱크 메쉬를 다시 활성화
         this.GetComponent<BoxCollider>().enabled = true; // 탱크의 충돌체를 다시 활성화
         this.GetComponent<Rigidbody>().isKinematic = false; // 탱크의 물리 엔진을 다시 활성화
         this.curHp = this.maxHp; // 부활 시 체력을 최대 체력으로 초기화
         this.hpBar.fillAmount = (float)this.curHp / (float)this.maxHp; // 체력바 UI 업데이트
+
+
+        this.gameObject.tag = this.tankTag; // 탱크의 태그를 다시 탱크 태그로 변경
+        ScriptsCtrl(true); // 탱크의 MonoBehaviourPun 스크립트를 다시 활성화
     }
+
+    private void ScriptsCtrl(bool onoff)
+    {
+        var script = this.GetComponentsInChildren<MonoBehaviourPun>();
+        foreach (var s in script)
+        {
+            s.enabled = onoff;
+        }
+    }
+
     void SetTankVisible(bool isVisible)
     {
         foreach (var meshRenderer in this.meshRenderers)

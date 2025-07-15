@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FireCannon : MonoBehaviourPun
 {
@@ -39,6 +39,8 @@ public class FireCannon : MonoBehaviourPun
 
     void Update()
     {
+        //if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (HoverEvent.instance.isEnter) return;
         if (this.input.isFire)
         {
             if (photonView.IsMine) // 로컬이라면
@@ -49,6 +51,7 @@ public class FireCannon : MonoBehaviourPun
 
         }
     }
+
     [PunRPC]
     void Fire()
     {
@@ -60,7 +63,7 @@ public class FireCannon : MonoBehaviourPun
         if(Physics.Raycast(ray,out hit, this.maxDistance, 1<< this.TerrainLayer|1<<7))
         {
             isHit = true;
-            if (hit.collider.CompareTag(tankTag))
+            if (photonView.IsMine&& hit.collider.CompareTag(tankTag))
             {
                 string tag = hit.collider.tag;
                 hit.collider.gameObject.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
