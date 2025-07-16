@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class WomanMovement : MonoBehaviour
+public class WomanMovement : MonoBehaviourPun
 {
     private Animator anim;
     private Rigidbody rb;
@@ -22,7 +23,8 @@ public class WomanMovement : MonoBehaviour
     }
     void FixedUpdate() // 실제 이동 부분
     {
-         this.Move();
+        if (!photonView.IsMine) return; // 로컬 플레이어가 아니라면 이동 X
+        this.Move();
         this.Rotate();
     }
     void Move()

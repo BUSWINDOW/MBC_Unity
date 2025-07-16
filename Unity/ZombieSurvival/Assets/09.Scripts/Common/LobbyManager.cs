@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
-using Unity.Android.Types;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +24,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             this.connectInfoTxt.text = "방에 접속 중..."; //접속 정보 텍스트 업데이트
+            PhotonNetwork.JoinRandomRoom(); //랜덤 방 참가 시도
         }
         else
         {
@@ -46,7 +46,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         connectInfoTxt.text = "서버 접속 실패";
     }
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
+    public override void OnJoinRandomFailed(short returnCode, string message)
     {
         //빈 방이 없어 방 참가 실패
         this.connectInfoTxt.text = "방이 없어 새로운 방 생성"; //접속 정보 텍스트 업데이트

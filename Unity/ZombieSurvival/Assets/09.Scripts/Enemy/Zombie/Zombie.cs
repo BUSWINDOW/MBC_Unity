@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
+using System;
 
 public class Zombie :LivingEntity
 {
@@ -26,6 +28,8 @@ public class Zombie :LivingEntity
     private readonly int hashHasTarget = Animator.StringToHash("HasTarget"); // 애니메이터 해시
     private readonly int hashDie = Animator.StringToHash("Die"); // 애니메이터 해시
 
+    //public Action DieAction; // 죽음 이벤트 액션
+
 
     //추적 대상이 있는지 알려주는 프로퍼티
     private bool hasTarget
@@ -44,7 +48,9 @@ public class Zombie :LivingEntity
         this.meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
     }
-
+    /*[PunRPC]
+    // 싱글일때 data로 받던거
+    // 네트워크 적용하니 ZombieData를 못받아서 바꿈
     public void Setup(ZombieData data) //좀비의 스펙을 결정하는 함수(이동속도, 체력 등)
     {
         this.maxHp = data.hp; // 좀비의 최대 체력 설정
@@ -60,13 +66,33 @@ public class Zombie :LivingEntity
         this.isDead = false; // 좀비가 살아있음
         //StartCoroutine(this.UpdatePath());
         this.meshRenderer.material.color = data.skinColor; // 좀비의 색상 설정
-    }
-    private void OnEnable()
+    }*/
+    [PunRPC]
+    public void Setup(int hp, int damage, float speed, Color color)
     {
+        this.maxHp = hp; // 좀비의 최대 체력 설정
+        this.hp = this.maxHp;
+        this.damage = damage; // 좀비의 공격력 설정
+        this.agent.speed = speed; // 네비게이션 에이전트의 이동 속도 설정
+        this.agent.enabled = true; // 네비게이션 에이전트 활성화
+        Collider[] cols = GetComponents<Collider>(); // 콜라이더 가져오기
+        foreach (Collider col in cols)
+        {
+            col.enabled = true; // 콜라이더 비활성화
+        }
+        this.isDead = false; // 좀비가 살아있음
+        //StartCoroutine(this.UpdatePath());
+        this.meshRenderer.material.color = color; // 좀비의 색상 설정
+    }
+    protected override  void  OnEnable()
+    {
+        base.OnEnable(); // LivingEntity의 OnEnable 호출
+        if (!PhotonNetwork.IsMasterClient) return; // 마스터 클라이언트가 아닐 경우 실행하지 않음
         StartCoroutine(this.UpdatePath()); // 경로 업데이트 코루틴 시작
     }
     void Update()
     {
+        if (!PhotonNetwork.IsMasterClient) return; // 마스터 클라이언트가 아닐 경우 실행하지 않음
         this.animator.SetBool(this.hashHasTarget,this.hasTarget);
     }
     private WaitForSeconds pathUpdateTime = new WaitForSeconds(0.25f);
@@ -96,6 +122,7 @@ public class Zombie :LivingEntity
             yield return this.pathUpdateTime; // 0.25초마다 경로 업데이트
         }
     }
+    [PunRPC]
     public override void OnDamage(int damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         if (!isDead)
@@ -120,10 +147,12 @@ public class Zombie :LivingEntity
         this.agent.enabled = false; // 네비게이션 에이전트 비활성화
         this.source.PlayOneShot(this.deathClip); // 죽음 소리 재생
         this.animator.SetTrigger(hashDie); // 죽음 애니메이션 트리거
+        //this.DieAction();
         base.Die();
     }
     public void OnTriggerStay(Collider other)
     {
+        if(!PhotonNetwork.IsMasterClient) return; // 마스터 클라이언트가 아닐 경우 실행하지 않음
         //트리거가 충돌한게 추적 대상이라면 공격 실행
         if (!this.isDead && Time.time >= this.lastAttackTime + timeBetweenAttack)
         {

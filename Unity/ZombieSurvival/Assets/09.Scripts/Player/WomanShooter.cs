@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class WomanShooter : MonoBehaviour
+public class WomanShooter : MonoBehaviourPun
 {
     public Gun gun; // 총을 참조하기 위한 변수
     public Transform gunPivot; // 총의 회전 중심점
@@ -35,6 +36,7 @@ public class WomanShooter : MonoBehaviour
     }
     void Update()
     {
+        if (!photonView.IsMine) return; // 로컬 플레이어가 아닐 경우 사격 X
         //input쪽 내용 받아서 발사하거나 재장전
         if (this.input.Fire)
         {

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
 
-public class ItemSpawner : MonoBehaviour
+public class ItemSpawner : MonoBehaviourPun
 {
     public GameObject[] items; // 생성할 아이템
     public Transform playerTr; // 플레이어 트랜스폼
@@ -23,7 +24,8 @@ public class ItemSpawner : MonoBehaviour
     }
     void Update()
     {
-        if(Time.time >= lastSpawnTime + timeBetSpawn && this.playerTr != null)
+        if (!PhotonNetwork.IsMasterClient) return; // 마스터 클라이언트가 아닐 경우 실행하지 않음
+        if (Time.time >= lastSpawnTime + timeBetSpawn && this.playerTr != null)
         {
             this.lastSpawnTime = Time.time; // 마지막 아이템 생성 시간 갱신
             this.timeBetSpawn = Random.Range(this.timeBetSpawnMin, this.timeBetSpawnMax); // 다음 아이템 생성 간격 시간 설정
@@ -37,9 +39,28 @@ public class ItemSpawner : MonoBehaviour
         spawnPos += Vector3.up * 0.5f; // 아이템이 땅에 닿도록 약간 위로 이동
 
         var itemSelected = items[Random.Range(0, items.Length)]; // 아이템 목록에서 랜덤으로 선택
-        GameObject item = Instantiate(itemSelected, spawnPos, Quaternion.identity); // 아이템 생성
 
-        Destroy(item, 5f); // 5초 후 아이템 제거
+        #region 싱글 게임일때 아이템 생성
+        /*GameObject item = Instantiate(itemSelected, spawnPos, Quaternion.identity); // 아이템 생성
+
+        Destroy(item, 5f); // 5초 후 아이템 제거*/
+        #endregion
+        #region 멀티 게임일때 아이템 생성
+        var item = PhotonNetwork.Instantiate(
+            itemSelected.name, // 아이템 이름
+            spawnPos, // 생성 위치
+            Quaternion.identity// 회전값
+        );
+
+        StartCoroutine(DestroyAfter(item, 5f)); // 5초 후 아이템 제거 코루틴 시작
+        #endregion
+
+    }
+    IEnumerator DestroyAfter(GameObject target, float time)
+    {
+        yield return new WaitForSeconds(time); // 지정된 시간 대기
+        if (target != null)
+            PhotonNetwork.Destroy(target); // PhotonNetwork를 통해 아이템 제거
     }
 
     private Vector3 GetRandomPointOnNavMesh(Vector3 centor, float dist)

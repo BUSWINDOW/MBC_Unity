@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Gun : MonoBehaviour
+public class Gun : MonoBehaviourPun, IPunObservable
 {
     public enum eState
     {
@@ -53,6 +54,13 @@ public class Gun : MonoBehaviour
         this.reloadTime = new WaitForSeconds(gunData.reloadTime); // 장전 시간 초기화
     }
 
+    private void Start()
+    {
+        photonView.Synchronization = ViewSynchronization.ReliableDeltaCompressed;
+        //데이터가 중요한 내용이므로 TCP/IP로 설정
+        photonView.ObservedComponents[0] = this; // 이미 들어가있긴하지만, 코드로 그냥 써둔것
+    }
+
     private void OnEnable()
     {
         // 플레이어 쪽 총 내용을 이 총 데이터로 변경
@@ -72,7 +80,8 @@ public class Gun : MonoBehaviour
 
     private void Shot()
     {
-        
+        //멀티게임일땐 사격 처리를 RPC를 통해서 한다.
+        photonView.RPC("ShotProcessOnServer", RpcTarget.MasterClient); // 마스터 클라이언트만 Shot 실행, 나머지는 동기화 시킴
         if (this.magAmmo <= 0)
         {
             this.Reload(); // 탄창 내 총알이 0이 되면 장전 시작
@@ -82,7 +91,8 @@ public class Gun : MonoBehaviour
         {
             this.magAmmo--; // 탄창 내 총알 수 감소
         }
-        RaycastHit hit;
+        #region 싱글 게임일때 사격 처리 부분
+        /*RaycastHit hit;
         Vector3 hitPos = Vector3.zero; // 총알이 맞은 위치 초기화
         if (Physics.Raycast(this.firePos.position, this.firePos.forward, out hit, this.fireDistance))
         {
@@ -98,8 +108,42 @@ public class Gun : MonoBehaviour
         {
             hitPos = this.firePos.position + (this.firePos.forward * this.fireDistance); // 맞은 위치가 없으면 사정거리 끝으로 설정
         }
+        StartCoroutine(this.ShotEffect(hitPos)); // 총구 플래시와 라인 렌더러 이펙트 재생*/
+        #endregion
+    }
+    [PunRPC]
+    private void ShotProcessOnServer()
+    {
+        RaycastHit hit;
+        Vector3 hitPos = Vector3.zero; // 총알이 맞은 위치 초기화
+
+        if (Physics.Raycast(this.firePos.position, this.firePos.forward, out hit, this.fireDistance))
+        {
+            IDamageable target = hit.collider.GetComponent<IDamageable>();
+
+            if(target != null)
+            {
+                target.OnDamage(gunData.damage, hit.point, hit.normal); // 맞은 대상에게 데미지 적용
+            }
+
+            hitPos = hit.point; // 맞은 위치를 저장
+        }
+        else
+        {
+            //안맞았다면
+            hitPos = this.firePos.position + (this.firePos.forward * this.fireDistance); // 맞은 위치가 없으면 사정거리 끝으로 설정
+        }
+
+        //발사 이팩트 재생(모든 클라이언트에서)
+        photonView.RPC("ShotEffectOnServer", RpcTarget.All, hitPos); // 모든 클라이언트에서 ShotEffectOnServer 실행
+    }
+
+    [PunRPC]
+    private void ShotEffectOnServer(Vector3 hitPos)
+    {
         StartCoroutine(this.ShotEffect(hitPos)); // 총구 플래시와 라인 렌더러 이펙트 재생
     }
+
     private WaitForSeconds shotEffectTime;
     IEnumerator ShotEffect(Vector3 hitPos)
     {
@@ -135,4 +179,21 @@ public class Gun : MonoBehaviour
         ammo -= ammoToReload; // 남은 총알 수 감소
         this.State = eState.Ready; // 상태를 Ready로 변경
     }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext((int)this.State); // 현재 총 상태를 전송
+            stream.SendNext(this.magAmmo); // 현재 탄창 내 총알 수 전송
+            stream.SendNext(this.ammo); // 현재 보유 중인 총알 수 전송
+        }
+        else
+        {
+            this.State = (eState)stream.ReceiveNext(); // 총 상태를 수신
+            this.magAmmo = (int)stream.ReceiveNext(); // 탄창 내 총알 수를 수신
+            this.ammo = (int)stream.ReceiveNext(); // 보유 중인 총알 수를 수신
+        }
+    }
+
 }

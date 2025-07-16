@@ -88,7 +88,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("ApplyPlayerCountUpdate", RpcTarget.All); // 모든 클라이언트에게 플레이어 수 업데이트 요청
-            //버그남
         }
     }
     public override void OnPlayerEnteredRoom(Player newPlayer) // 유저가 입장했을때 자동 호출

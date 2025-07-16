@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class WomanInput : MonoBehaviour
+public class WomanInput : MonoBehaviourPun
 {
     // Input값 관리
 
@@ -31,6 +32,7 @@ public class WomanInput : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine) return; // 로컬이 아니라면 입력 X
         if(GameManager.Instance != null && GameManager.Instance.IsGameOver)
         {
             this.Move = 0;
