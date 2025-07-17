@@ -19,6 +19,6 @@ public class PlayerInput : MonoBehaviour
     {
         this.h = Input.GetAxis(Horizontal);
         this.v = Input.GetAxis(Vertical);
-        this.isFire = Input.GetButtonDown(Fire1);
+        this.isFire = Input.GetButton(Fire1);
     }
 }

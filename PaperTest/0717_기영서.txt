@@ -1,0 +1,23 @@
+1. 유니티 UI중에서 TMP 를 사용하려면
+
+TMP추가 시도하면 나오는 창에서 Import TMP Essential클릭
+or
+Window -> TMP -> Import TMP Essential Resources 클릭
+
+
+2. TextMeshPro와 그냥 Text차이 3가지
+1. 코드에서 불러오려면 TMP_Text로 불러와야한다
+2. 추가적인 기능이 많다
+3. 기본적인 해상도가 높다
+
+ 
+3. Package Manager에서 Universal RP import
+Asset쪽에서 Create -> Rendering -> URP Asset(With Universal Renderer) 생성
+Project Settings에서 URP Global Settings에서 new를 눌러 새로 하나 만듬
+Graphics에서 생성했던 URP Asset을 넣음
+
+
+4. 해킹 위험이 덜한 API
+MySQL
+FireBase
+AWS

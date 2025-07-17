@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPun/*,IPunObservable*/
 {
     CharacterController controller;
     PlayerInput input;
@@ -13,6 +14,10 @@ public class PlayerMove : MonoBehaviour
     private Ray ray;
     private readonly int hashForward = Animator.StringToHash("Forward");
     private readonly int hashStrafe = Animator.StringToHash("Strafe");
+    Plane plane;
+
+    Vector3 receivePos = Vector3.zero;
+    Quaternion receiveRot = Quaternion.identity;
 
     void Start()
     {
@@ -20,14 +25,39 @@ public class PlayerMove : MonoBehaviour
         this.input = GetComponent<PlayerInput>();
         this.anim = GetComponent<Animator>();
         this.cam = Camera.main;
+        this.plane = new Plane(Vector3.up, transform.position);
     }
 
 
     void Update()
     {
-        this.Move();
-        this.Turn();
+        if (photonView.IsMine)
+        {
+            this.Move();
+            this.Turn();
+        }
+        /*else
+        {
+            this.transform.position = this.receivePos;
+            this.transform.rotation = this.receiveRot;
+        }*/
+
     }
+
+/*    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(this.transform.position);
+            stream.SendNext(this.transform.rotation);
+        }
+        else
+        {
+            this.receivePos = (Vector3)stream.ReceiveNext();
+            this.receiveRot = (Quaternion)stream.ReceiveNext();
+        }
+    }*/
+
     void Move()
     {
         Vector3 cameraForward = cam.transform.forward;
@@ -51,7 +81,6 @@ public class PlayerMove : MonoBehaviour
     void Turn()
     {
         ray = cam.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
         plane.Raycast(ray, out float enter);
         var hitPoint = ray.GetPoint(enter);
         Vector3 dir = hitPoint - this.transform.position;
@@ -59,7 +88,10 @@ public class PlayerMove : MonoBehaviour
         if (dir != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(dir);
-            this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            //this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            this.transform.rotation = targetRotation;
         }
     }
+
+
 }
