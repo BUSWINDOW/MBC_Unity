@@ -108,7 +108,7 @@ public class ZombieSpawner : MonoBehaviourPun, IPunObservable
                 //멀티 게임 기준
                 zombiePool[i].photonView.RPC("Setup", RpcTarget.All, data.hp,data.damage,data.moveSpeed,data.skinColor); // RPC를 통해 좀비 데이터 설정
                 this.zombies.Add(zombiePool[i]); // 생성된 좀비 목록에 추가
-                zombiePool[i].gameObject.SetActive(true); // 비활성화된 좀비가 있다면 활성화
+                //zombiePool[i].gameObject.SetActive(true); // 비활성화된 좀비가 있다면 활성화
                 
                 return;
             }
@@ -131,8 +131,6 @@ public class ZombieSpawner : MonoBehaviourPun, IPunObservable
         {
             this.zombies.Remove(zombie); // 좀비가 죽으면 목록에서 제거
                                          //목록에서만 제거
-
-
             UpdateUI(); // UI 업데이트
             GameManager.Instance.AddScore(100); // 점수 업데이트
         };

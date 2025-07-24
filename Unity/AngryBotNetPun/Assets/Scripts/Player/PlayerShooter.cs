@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerShooter : MonoBehaviourPun
 {
@@ -19,10 +20,11 @@ public class PlayerShooter : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return; // ¿Ã∫•∆Æ »≈
             if (this.p_Input.isFire)
             {
-                FireBullet();
-                photonView.RPC("FireBullet", RpcTarget.Others);
+                FireBullet(photonView.OwnerActorNr);
+                photonView.RPC("FireBullet", RpcTarget.Others , photonView.OwnerActorNr);
             }
         }
         else
@@ -31,11 +33,12 @@ public class PlayerShooter : MonoBehaviourPun
         }
     }
     [PunRPC]
-    private void FireBullet()
+    private void FireBullet(int actorNum)
     {
         if(!this.muzzleFlash.isPlaying)
             this.muzzleFlash.Play();
 
         GameObject bullet = Instantiate(bulletPrefab, firePos.position, firePos.rotation);
+        bullet.GetComponent<BulletCtrl>().actorNum = actorNum;
     }
 }

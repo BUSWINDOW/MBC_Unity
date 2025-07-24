@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class TPSPlayerCtrl : MonoBehaviour
 {
     public TPSPlayerInput input;
+    private TPSAnimationCtrl animCtrl;
     private PlayerDamage damage;
     public Rigidbody rb;
     private const string enemy = "Enemy";
@@ -17,10 +18,10 @@ public class TPSPlayerCtrl : MonoBehaviour
 
     public float moveSpeed = 300;
     public float runSpeed = 800;
-    public float rotateSpeed = 400;
+    public float rotateSpeed = 40;
 
     private int hp;
-    private int max_Hp = 100000;
+    private int max_Hp = 100;
 
     [SerializeField] private Image hp_Bar;
 
@@ -31,12 +32,14 @@ public class TPSPlayerCtrl : MonoBehaviour
     {
         this.input = GetComponent<TPSPlayerInput>();
         this.damage = GetComponent<PlayerDamage>();
+        this.animCtrl = GetComponent<TPSAnimationCtrl>();
 
         this.damage.hitAction = () =>
         {
             this.hp -= 20;
             this.hp = Mathf.Clamp(this.hp, 0, this.max_Hp);
             HP_Bar_Display();
+            this.animCtrl.HP_Change(this.hp_Bar.fillAmount);
             if (this.hp <= 0)
             {
                 PlayerDie();
@@ -75,7 +78,7 @@ public class TPSPlayerCtrl : MonoBehaviour
 
     private void Update()
     {
-        this.transform.Rotate(Vector3.up * Time.fixedDeltaTime * rotateSpeed * this.input.MouseX);
+        this.transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed * this.input.MouseX);
     }
 
     void FixedUpdate()

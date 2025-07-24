@@ -190,7 +190,7 @@ public class RPGPlayerCtrl : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0f, cameraYRotation, 0f);
 
             // y축만 사용한 회전으로 슬러프 적용
-            modelTr.rotation = Quaternion.Slerp(modelTr.rotation, targetRotation, Time.deltaTime * 10f);
+            this.transform.rotation = Quaternion.Slerp(modelTr.rotation, targetRotation, Time.deltaTime * 10f);
         }
         if (Input.GetMouseButtonDown(2))
         {

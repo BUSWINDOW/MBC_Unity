@@ -17,4 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01_Scenes/FadeInScene.unity
     guid: fee029ec0d72d1749a935a379eb05004
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 186e71b77ec269249a4814b352c157d4, type: 2}

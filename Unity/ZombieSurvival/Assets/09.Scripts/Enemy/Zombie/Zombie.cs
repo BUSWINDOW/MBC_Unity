@@ -75,6 +75,7 @@ public class Zombie :LivingEntity
         this.damage = damage; // 좀비의 공격력 설정
         this.agent.speed = speed; // 네비게이션 에이전트의 이동 속도 설정
         this.agent.enabled = true; // 네비게이션 에이전트 활성화
+        
         Collider[] cols = GetComponents<Collider>(); // 콜라이더 가져오기
         foreach (Collider col in cols)
         {
@@ -83,6 +84,7 @@ public class Zombie :LivingEntity
         this.isDead = false; // 좀비가 살아있음
         //StartCoroutine(this.UpdatePath());
         this.meshRenderer.material.color = color; // 좀비의 색상 설정
+        this.gameObject.SetActive(true);
     }
     protected override  void  OnEnable()
     {

@@ -46,6 +46,7 @@ public class TPSFire : MonoBehaviour
     private float prevTime;
 
     bool isReload;
+    bool isThrowing;
 
     public ParticleSystem cartiage;
     public ParticleSystem muzzleFlash;
@@ -127,7 +128,7 @@ public class TPSFire : MonoBehaviour
         }
 */
 
-        if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload)
+        if (this.input.Fire && (Time.time - this.prevTime > this.shotDelay) && !this.input.isRun && !this.isReload && !this.isThrowing)
         {
             this.prevTime = Time.time;
 
@@ -159,7 +160,10 @@ public class TPSFire : MonoBehaviour
             }
 
         }
-
+        if (this.input.Throw&&!this.isThrowing&&!this.isReload)
+        {
+            this.Throw();
+        }
     }
 
     private void Shot()
@@ -173,6 +177,16 @@ public class TPSFire : MonoBehaviour
 
         this.muzzleFlash.Play();
         this.cartiage.Play();
+    }
+
+    void Throw()
+    {
+        this.isThrowing = true;
+        StartCoroutine(this.WaitSomeSec(() =>
+        {
+            this.isThrowing = false;
+            this.input.Throw = false;
+        },1.5f));
     }
     void Reload()
     {

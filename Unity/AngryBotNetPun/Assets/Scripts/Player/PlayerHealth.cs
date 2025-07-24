@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviourPun
 {
     public int hp;
     public int maxHp;
@@ -14,6 +16,8 @@ public class PlayerHealth : MonoBehaviour
 
     public List<Renderer> meshes;
 
+    
+    public Action<GameObject> dieAction;
 
     public CharacterController ctrl;
     public Animator anim;
@@ -36,6 +40,18 @@ public class PlayerHealth : MonoBehaviour
             this.hp -= 1;
             if (this.hp <= 0)
             {
+                if (photonView.IsMine)
+                {
+                    GameManager.Instance.photonView.RPC("UpdateKillLog",
+                        RpcTarget.All,
+                        collision.gameObject.GetComponent<BulletCtrl>().actorNum,
+                        this.photonView.OwnerActorNr);
+                }
+                /*GameManager.Instance.photonView.RPC("UpdateKillLog",
+                        RpcTarget.All,
+                        collision.gameObject.GetComponent<BulletCtrl>().actorNum,
+                        this.photonView.OwnerActorNr);*/
+
                 StartCoroutine(PlayerDieRoutine());
             }
         }
