@@ -136,7 +136,7 @@ public class ZombieSpawner : MonoBehaviourPun, IPunObservable
         };
 
         // 생성을 호스트(마스터 클라이언트) 에서 전담하니, 액션 할당도 마스터 클라이언트에서만 되는 문제가 있다
-        // 아직 해결 못했다
+        // 액션 실행을 호스트에서만 해서 해결
         this.zombiePool.Add(zombie); // 생성된 좀비 풀링에 추가
         this.zombies.Add(zombie); // 생성된 좀비 목록에 추가
 

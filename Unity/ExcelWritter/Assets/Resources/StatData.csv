@@ -1,0 +1,6 @@
+id,Name,Level,Hp,Exp,Str,Dex,Con,Int
+int,string,int,int,int,int,int,int,int
+4,f,0,0,0,0,0,0,0
+3,d,0,0,0,0,0,0,0
+2,s,1557,123,23,324,523,52,134
+1,a,0,0,0,0,0,0,0

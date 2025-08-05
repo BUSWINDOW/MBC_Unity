@@ -1,0 +1,9 @@
+id,Grade,CompanyName,AwardName,Price,ImagePath
+int,int,string,string,int,string
+6,6,그라프,그라프 틸다의 보우 다이아몬드 스터드 이어링 화이트 골드,61918500,Images/SSV
+5,5,캐리어,캐리어 The Premium AI 에어로 18단 에어컨(최고급형) OSCB180ASPWMD,2447280,Images/SV
+4,4,소니,소니 PS5 플레이스테이션 디스크 에디션,756800,Images/V
+3,3,순은,순은 실버바 200g (100g * 2) (디자인 랜덤 발송),550000,Images/S
+2,2,쿠비녹스,쿠비녹스 생선구이기,195600,Images/A
+1,1,종근당,종근당 활력침향단 30환,298000,Images/B
+0,0,클리오,클리오 샤프 쏘 심플 워터프루프 펜슬 라이너\n0.14g,14980,Images/C

@@ -10,13 +10,12 @@ public class PlayerMove : MonoBehaviour
     int enemyLayerMask = 1 << 7;
     Ray ray;
     RaycastHit hit;
-
-
-    Animator anim;
+    PlayerAnimCtrl animCtrl;
+    
     void Start()
     {
         this.agent = GetComponent<NavMeshAgent>();
-        this.anim = GetComponent<Animator>();
+        this.animCtrl = GetComponent<PlayerAnimCtrl>();
     }
     void Update()
     {
@@ -49,22 +48,42 @@ public class PlayerMove : MonoBehaviour
     }
     IEnumerator moveRoutine()
     {
-        this.anim.SetFloat("forwardSpeed", this.agent.speed);
+        this.animCtrl.RunAnimSet(this.agent.speed);
         while (Vector3.Distance(this.agent.destination, this.transform.position) > 0.1f)
         {
             yield return null;
         }
-        this.anim.SetFloat("forwardSpeed", 0);
+        this.animCtrl.RunAnimSet(0);
     }
     IEnumerator attackRoutine()
     {
-        this.anim.SetFloat("forwardSpeed", this.agent.speed);
-        while (Vector3.Distance(this.agent.destination, this.transform.position) > 1f)
+        this.animCtrl.RunAnimSet(this.agent.speed);
+        while (Vector3.Distance(this.agent.destination, this.transform.position) > 1)
         {
+            //Debug.Log(this.transform.rotation != Quaternion.LookRotation(hit.point));
+            
             yield return null;
         }
+        //this.transform.LookAt(hit.point);
+
+
+        //Debug.Log(this.transform.rotation != Quaternion.LookRotation(hit.point));
+
+        this.animCtrl.RunAnimSet(0);
         this.agent.SetDestination(this.transform.position);
-        this.anim.SetFloat("forwardSpeed", 0);
-        this.anim.SetTrigger("Attack");
+        var targetDir = hit.point - this.transform.position;
+        targetDir.y = 0;
+        
+        while (Quaternion.Angle(
+            this.transform.rotation, 
+            Quaternion.LookRotation(targetDir)) > 1)
+        {
+            transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(targetDir), Time.deltaTime * 20);
+
+            yield return null;
+        }
+        this.animCtrl.AttackAnimSet();
     }
+
+
 }

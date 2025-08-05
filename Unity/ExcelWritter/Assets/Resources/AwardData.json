@@ -1,0 +1,58 @@
+[
+  {
+    "id": "6",
+    "Grade": "6",
+    "CompanyName": "그라프",
+    "AwardName": "그라프 틸다의 보우 다이아몬드 스터드 이어링 화이트 골드",
+    "Price": "61918500",
+    "ImagePath": "Images/SSV"
+  },
+  {
+    "id": "5",
+    "Grade": "5",
+    "CompanyName": "캐리어",
+    "AwardName": "캐리어 The Premium AI 에어로 18단 에어컨(최고급형) OSCB180ASPWMD",
+    "Price": "2447280",
+    "ImagePath": "Images/SV"
+  },
+  {
+    "id": "4",
+    "Grade": "4",
+    "CompanyName": "소니",
+    "AwardName": "소니 PS5 플레이스테이션 디스크 에디션",
+    "Price": "756800",
+    "ImagePath": "Images/V"
+  },
+  {
+    "id": "3",
+    "Grade": "3",
+    "CompanyName": "순은",
+    "AwardName": "순은 실버바 200g (100g * 2) (디자인 랜덤 발송)",
+    "Price": "550000",
+    "ImagePath": "Images/S"
+  },
+  {
+    "id": "2",
+    "Grade": "2",
+    "CompanyName": "쿠비녹스",
+    "AwardName": "쿠비녹스 생선구이기",
+    "Price": "195600",
+    "ImagePath": "Images/A"
+  },
+  {
+    "id": "1",
+    "Grade": "1",
+    "CompanyName": "종근당",
+    "AwardName": "종근당 활력침향단 30환",
+    "Price": "298000",
+    "ImagePath": "Images/B"
+  },
+  {
+    "id": "0",
+    "Grade": "0",
+    "CompanyName": "클리오",
+    "AwardName": "클리오 샤프 쏘 심플 워터프루프 펜슬 라이너\n0.14g",
+    "Price": "14980",
+    "ImagePath": "Images/C"
+  }
+]
