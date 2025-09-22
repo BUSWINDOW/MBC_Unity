@@ -35,7 +35,7 @@ public class AICar : MonoBehaviour
 
 
     [Header("Sensors")]
-    [SerializeField] private float sensorLength = 20f; // 센서 길이
+    [SerializeField] private float sensorLength = 5f; // 센서 길이
     [SerializeField] private Vector3 frontSensorPosition = new Vector3(0, 0.5f, 1.5f); //전방 센서 위치
     public float frontSideSensorPosition = 2f; // 전방 측면 센서 위치
     public float frontSensorAngle = 30f; //전방 센서 각도
@@ -84,7 +84,6 @@ public class AICar : MonoBehaviour
     
     void CarSensor()
     {
-        RaycastHit hit;
         Vector3 baseSensorPos = this.transform.position +
             this.transform.forward * this.frontSensorPosition.z +
             this.transform.up * this.frontSensorPosition.y;
@@ -92,7 +91,7 @@ public class AICar : MonoBehaviour
         bool avoidWayCheck = false;
         float avoidMultiplier = 0f; // 장애물 회피를 위한 가중치
         #region --정면 중앙 센서--
-        if(Physics.Raycast(baseSensorPos , this.transform.forward , out hit, sensorLength))
+        if(Physics.Raycast(baseSensorPos , this.transform.forward, sensorLength))
         {
             this.avoiding = true;
 
@@ -100,7 +99,7 @@ public class AICar : MonoBehaviour
         }
         #endregion
         #region --정면 우측 센서--
-        if (Physics.Raycast(baseSensorPos + this.transform.right * this.frontSideSensorPosition, this.transform.forward, out hit, sensorLength))
+        if (Physics.Raycast(baseSensorPos + this.transform.right * this.frontSideSensorPosition, this.transform.forward, sensorLength))
         {
             this.avoiding = true;
             avoidWayCheck = true;
@@ -108,7 +107,7 @@ public class AICar : MonoBehaviour
         }
         #endregion
         #region --정면 좌측 센서--
-        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, this.transform.forward, out hit, sensorLength))
+        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, this.transform.forward, sensorLength))
         {
             this.avoiding = true;
             if (!avoidWayCheck)
@@ -119,7 +118,7 @@ public class AICar : MonoBehaviour
         }
         #endregion
         #region --정면 우측 대각 센서--
-        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, Quaternion.AngleAxis(this.frontSensorAngle,this.transform.up) * this.transform.forward, out hit, sensorLength))
+        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, Quaternion.AngleAxis(this.frontSensorAngle,this.transform.up) * this.transform.forward,  sensorLength))
         {
             this.avoiding = true;
 
@@ -127,7 +126,7 @@ public class AICar : MonoBehaviour
         }
         #endregion
         #region --정면 좌측 대각 센서--
-        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, Quaternion.AngleAxis(-this.frontSensorAngle, this.transform.up) * this.transform.forward, out hit, sensorLength))
+        if (Physics.Raycast(baseSensorPos - this.transform.right * this.frontSideSensorPosition, Quaternion.AngleAxis(-this.frontSensorAngle, this.transform.up) * this.transform.forward, sensorLength))
         {
             this.avoiding = true;
 

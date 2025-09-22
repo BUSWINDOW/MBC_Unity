@@ -51,6 +51,7 @@ namespace CsvConverter
                 {
                     //이 부분 수정 필요, string의 경우에만 따옴표가 붙고, 나머진 안붙어야함
                     // 이 값이 string인지 CS만드는 쪽과 연계해서 확인 필요
+                    // 따옴표 붙어있어도 숫자 입력 제대로 되는거 확인함
                     json = json + string.Format($"    \"{name[j]}\": \"{inside[i][j]}\",\n");
                 }
                 json = json.Substring(0, json.Length - 2);
@@ -59,7 +60,7 @@ namespace CsvConverter
             }
             json = json.Substring(0, json.Length - 2);
             json = json + "\n]";
-            File.WriteAllText("./" + filename + ".json", json);
+            File.WriteAllText("./" + filename + ".json", json, Encoding.UTF8);
         }
     }
 }

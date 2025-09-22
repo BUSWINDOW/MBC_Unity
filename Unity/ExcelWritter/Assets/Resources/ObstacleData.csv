@@ -1,0 +1,2 @@
+id,kind,cellX,cellY,posX,posY,posZ
+int,int,int,int,float,float,float
